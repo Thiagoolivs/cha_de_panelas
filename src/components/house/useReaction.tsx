@@ -4,7 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import type { GiftView, Room } from "@/lib/types";
 import { useGifts } from "@/lib/repository/context";
 import { useToast } from "@/components/ui/Toast";
-import { pickPhrase } from "@/lib/phrases";
+import { REACTION_POSES, pickPhrase } from "@/lib/phrases";
+import { AnimatePresence, motion } from "framer-motion";
+import { Couple } from "@/components/characters/Couple";
+import { ROOM_BOXES } from "./geometry";
+import { SLOTS } from "./slots";
 import { CAMERA_MS } from "./camera";
 
 /** Linha do tempo da reação (ms desde o início). */
@@ -97,6 +101,44 @@ export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView
 
   const active = stage !== "idle";
   const focus: Room | null = active && gift ? gift.room : null;
+
+  let overlay: Partial<Record<Room, React.ReactNode>> | undefined;
+  if (active && gift) {
+    const box = ROOM_BOXES[gift.room];
+    const slot = SLOTS[gift.room]?.[gift.slot];
+    overlay = {
+      [gift.room]: (
+        <Couple
+          key={gift.id}
+          stage={stage}
+          poses={REACTION_POSES[gift.category]}
+          itemX={slot?.x ?? box.w / 2}
+          roomW={box.w}
+          roomH={box.h}
+        />
+      ),
+    };
+  }
+  const showLabel = active && (stage === "pose" || stage === "exit");
+  const label = (
+    <AnimatePresence>
+      {showLabel && (
+        <motion.p
+          key={phrase}
+          className="pointer-events-none absolute inset-x-0 top-[6%] px-6 text-center"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          aria-hidden="true"
+        >
+          <span className="script inline-block rounded-[2px] bg-cream/90 px-4 pt-2 pb-1 text-[2.3rem] text-olive-700 shadow-[0_2px_16px_rgba(253,251,247,0.9)] sm:text-[2.9rem]">
+            {phrase}
+          </span>
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
   return {
     active,
     stage,
@@ -106,7 +148,7 @@ export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView
     hiddenGiftId: stage === "zoom" ? gift?.id ?? null : null,
     dropGiftId: stage === "drop" ? gift?.id ?? null : null,
     dropRef,
-    overlay: undefined as Partial<Record<Room, React.ReactNode>> | undefined,
-    label: null as React.ReactNode,
+    overlay,
+    label,
   };
 }
