@@ -15,7 +15,7 @@ import { AfterChoice } from "./AfterChoice";
 // A casinha carrega depois, sem bloquear a lista.
 const HouseStage = dynamic(() => import("@/components/house/HouseStage").then((m) => m.HouseStage), {
   ssr: false,
-  loading: () => <div className="aspect-[760/700] w-full animate-pulse bg-olive-700/5" aria-hidden="true" />,
+  loading: () => <div className="aspect-[760/668] w-full animate-pulse bg-olive-700/5" aria-hidden="true" />,
 });
 
 export function GiftsExperience() {

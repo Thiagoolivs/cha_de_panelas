@@ -63,8 +63,8 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
       </div>
 
       {!soldOut && (
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8rem]">
-          <span className="text-gray">{giftsCopy.whereToFind}:</span>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 text-[0.8rem]">
+          <span className="w-full text-[0.72rem] tracking-[0.12em] text-gray uppercase">{giftsCopy.whereToFind}</span>
           {links.map((l) => (
             <a
               key={l.label}

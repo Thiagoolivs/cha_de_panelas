@@ -62,7 +62,7 @@ export function GiftList({ gifts, myIds, onChoose }: Props) {
               {TIER_LABEL[g.tier].title}
             </h2>
             <p className="mt-1 text-[0.88rem] text-olive-900">{TIER_LABEL[g.tier].note}</p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1">
               {g.items.map((gift) => (
                 <GiftCard key={gift.id} gift={gift} isMine={myIds.has(gift.id)} onChoose={onChoose} />
               ))}

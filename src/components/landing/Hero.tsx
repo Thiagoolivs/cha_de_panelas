@@ -7,14 +7,14 @@ import { UtensilBand, UtensilCorner } from "@/components/ornaments/Utensils";
 export function Hero() {
   return (
     <header className="relative overflow-hidden px-4 pb-14 pt-0">
-      <UtensilBand className="mx-auto block h-[92px] w-full max-w-[420px]" mode="hang" />
-      <UtensilCorner className="pointer-events-none absolute -left-6 bottom-0 hidden w-[130px] opacity-80 sm:block" />
-      <UtensilCorner className="pointer-events-none absolute -right-6 bottom-0 hidden w-[130px] opacity-80 sm:block" flip />
+      <UtensilBand className="mx-auto block h-[92px] w-full max-w-[420px] sm:h-[120px] sm:max-w-[540px]" mode="hang" />
+      <UtensilCorner className="pointer-events-none absolute top-40 left-4 hidden w-[150px] opacity-70 md:block lg:left-[8%]" />
+      <UtensilCorner className="pointer-events-none absolute top-40 right-4 hidden w-[150px] opacity-70 md:block lg:right-[8%]" flip />
 
       <div className="mx-auto mt-6 max-w-md text-center">
         <p className="eyebrow">{copy.hero.eyebrow}</p>
         <h1 className="title-caps mt-3 text-[2.6rem] sm:text-[3.2rem]">{copy.hero.title}</h1>
-        <p className="script mt-2 text-[4.4rem] text-olive-700 sm:text-[5.2rem]" aria-label={site.couple.short}>
+        <p className="script mt-4 text-[4.4rem] text-olive-700 sm:text-[5.2rem]" aria-label={site.couple.short}>
           {site.couple.short}
         </p>
 

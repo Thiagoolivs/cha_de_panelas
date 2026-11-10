@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "e2e": "playwright test",
-    "assets": "bash scripts/extract-assets.sh && node scripts/asset-manifest.mjs"
+    "assets": "bash scripts/extract-assets.sh && node scripts/asset-manifest.mjs",
+    "og": "node scripts/og.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.43.0",

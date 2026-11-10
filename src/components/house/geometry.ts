@@ -1,7 +1,7 @@
 import type { Room } from "@/lib/types";
 
 /** Casa em corte: viewBox 760×700. Telhado 20–120, andar de cima 120–380, térreo 380–640, grama 640–660. */
-export const VIEW = { x: 0, y: 0, w: 760, h: 700 } as const;
+export const VIEW = { x: 0, y: 0, w: 760, h: 668 } as const;
 
 export interface Box {
   x: number;
