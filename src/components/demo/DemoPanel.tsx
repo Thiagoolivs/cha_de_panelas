@@ -17,7 +17,7 @@ export function DemoPanel() {
   const reserved = (gifts ?? []).filter((g) => house.some((h) => h.giftId === g.id));
 
   return (
-    <div className="fixed bottom-3 left-3 z-40 text-[0.82rem]" data-demo-panel>
+    <div className="fixed right-3 bottom-3 z-40 text-[0.82rem]" data-demo-panel>
       {open ? (
         <div className="w-[260px] border border-olive-700/30 bg-cream/95 p-3 shadow-[0_6px_24px_rgba(43,43,36,0.15)] backdrop-blur">
           <div className="flex items-center justify-between">

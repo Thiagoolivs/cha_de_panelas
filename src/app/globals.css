@@ -166,3 +166,15 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Foco visível dentro da casinha (SVG) */
+.house-room:focus-visible .house-focus-ring {
+  stroke: var(--board);
+  stroke-width: 3;
+}
+.house-item:focus-visible {
+  outline: none;
+}
+.house-item:focus-visible > g {
+  filter: drop-shadow(0 0 2px var(--board));
+}
