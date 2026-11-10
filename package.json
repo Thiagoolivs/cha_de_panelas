@@ -1,0 +1,32 @@
+{
+  "name": "cha-dos-noivos",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/asset-manifest.mjs && next dev",
+    "build": "node scripts/asset-manifest.mjs && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "assets": "bash scripts/extract-assets.sh && node scripts/asset-manifest.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^12.43.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5",
+    "vitest": "^3.2.7"
+  }
+}

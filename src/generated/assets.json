@@ -1,0 +1,19 @@
+{
+  "faces": {
+    "kawany": {
+      "sorriso": null,
+      "surpresa": null,
+      "gargalhada": null
+    },
+    "nathan": {
+      "sorriso": null,
+      "surpresa": null,
+      "gargalhada": null
+    }
+  },
+  "hands": null,
+  "utensils": {
+    "top": null,
+    "bottom": null
+  }
+}
