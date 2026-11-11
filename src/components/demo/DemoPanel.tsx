@@ -12,8 +12,7 @@ export function DemoPanel() {
   const [open, setOpen] = useState(false);
   const [pick, setPick] = useState("");
   const path = usePathname();
-  if (!hasDemo(repo)) return null;
-  const demo = repo.demo;
+  const demo = hasDemo(repo) ? repo.demo : null;
   const reserved = (gifts ?? []).filter((g) => house.some((h) => h.giftId === g.id));
 
   return (
@@ -27,23 +26,29 @@ export function DemoPanel() {
             </button>
           </div>
           <div className="mt-2 grid gap-1.5">
-            <button
-              type="button"
-              className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]"
-              onClick={async () => {
-                const id = await demo.simulateGuest();
-                await refresh();
-                if (id) requestReaction(id);
-              }}
-            >
-              Simular convidado
-            </button>
-            <button type="button" className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]" onClick={async () => { await demo.fillHouse(); await refresh(); }}>
-              Encher a casa
-            </button>
-            <button type="button" className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]" onClick={async () => { await demo.clearHouse(); await refresh(); }}>
-              Esvaziar a casa
-            </button>
+            {demo ? (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]"
+                  onClick={async () => {
+                    const id = await demo.simulateGuest();
+                    await refresh();
+                    if (id) requestReaction(id);
+                  }}
+                >
+                  Simular convidado
+                </button>
+                <button type="button" className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]" onClick={async () => { await demo.fillHouse(); await refresh(); }}>
+                  Encher a casa
+                </button>
+                <button type="button" className="btn btn-outline min-h-[38px] py-1 text-[0.72rem]" onClick={async () => { await demo.clearHouse(); await refresh(); }}>
+                  Esvaziar a casa
+                </button>
+              </>
+            ) : (
+              <p className="text-[0.75rem] text-olive-900">Dados reais (banco). Simular e encher ficam só no modo local.</p>
+            )}
             <label className="mt-1 block text-[0.75rem] text-olive-900" htmlFor="demo-replay">
               Rever reação
             </label>

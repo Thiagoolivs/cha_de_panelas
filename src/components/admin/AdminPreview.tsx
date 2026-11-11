@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AdminSnapshot } from "@/lib/types";
 import { ROOMS } from "@/lib/types";
 import { useGifts } from "@/lib/repository/context";
+import { ADMIN_KEY, UnauthorizedError } from "@/lib/repository/api";
 import { ROOM_LABEL } from "@/content/gifts-copy";
 
 export function AdminPreview() {
@@ -11,16 +12,51 @@ export function AdminPreview() {
   const [snap, setSnap] = useState<AdminSnapshot | null>(null);
   const [tab, setTab] = useState<"presentes" | "convidados" | "recados">("presentes");
   const [fav, setFav] = useState<Set<number>>(new Set());
+  const [locked, setLocked] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [pass, setPass] = useState("");
 
   useEffect(() => {
-    void repo.adminView().then(setSnap);
-  }, [repo, house]);
+    repo
+      .adminView()
+      .then((s) => {
+        setSnap(s);
+        setLocked(false);
+      })
+      .catch((e) => {
+        if (e instanceof UnauthorizedError) setLocked(true);
+      });
+  }, [repo, house, attempt]);
 
   const byRoom = useMemo(() => {
     if (!snap) return [];
     return ROOMS.map((r) => ({ room: r, gifts: snap.gifts.filter((g) => g.room === r) })).filter((x) => x.gifts.length);
   }, [snap]);
 
+  if (locked)
+    return (
+      <form
+        className="mt-8 max-w-sm space-y-3"
+        onSubmit={(e) => {
+          e.preventDefault();
+          try {
+            sessionStorage.setItem(ADMIN_KEY, pass);
+          } catch {
+            /* ignora */
+          }
+          setAttempt((n) => n + 1);
+        }}
+      >
+        <label htmlFor="admin-pass" className="block text-[0.9rem] font-medium">
+          Senha
+        </label>
+        <input id="admin-pass" type="password" className="field" value={pass} onChange={(e) => setPass(e.target.value)} autoComplete="current-password" />
+        {attempt > 0 && <p className="text-[0.85rem] text-board">Senha incorreta.</p>}
+        <button type="submit" className="btn btn-primary w-full">
+          Entrar
+        </button>
+      </form>
+    );
   if (!snap) return <p className="mt-8 text-olive-900">Carregando…</p>;
 
   const total = snap.gifts.reduce((a, g) => a + g.quantity, 0);
