@@ -1,10 +1,10 @@
 import type { Box } from "./geometry";
 import { K, perspective } from "./geometry";
 
-const WALL = "#f7f2e8";
-const BACK = "#fbf8f1";
-const CEIL = "#faf7f0";
-const FLOOR = "rgba(195,169,132,0.20)";
+const WALL = "var(--h-wall)";
+const BACK = "var(--h-back)";
+const CEIL = "var(--h-ceil)";
+const FLOOR = "var(--h-floor)";
 
 interface Props {
   box: Box;
@@ -45,8 +45,8 @@ export function RoomShell({ box, floor }: Props) {
       <path d={`M${w} 0L${x1} ${y0}V${y1}L${w} ${h}z`} fill={WALL} stroke="none" />
       <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={BACK} stroke="none" />
       <path d={`M0 ${h}H${w}L${x1} ${y1}H${x0}z`} fill={FLOOR} stroke="none" />
-      <g opacity={0.35}>{boards}</g>
-      <g opacity={0.8}>
+      <g opacity={0.22}>{boards}</g>
+      <g opacity={0.55}>
         <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} />
         <path d={`M0 0L${x0} ${y0}M${w} 0L${x1} ${y0}M0 ${h}L${x0} ${y1}M${w} ${h}L${x1} ${y1}`} />
       </g>
@@ -61,7 +61,9 @@ export function Pendant({ x, y0, y }: { x: number; y0: number; y: number }) {
   return (
     <g>
       <path d={`M${x} ${y0}V${y - 8}`} opacity={0.7} />
-      <path d={`M${x - 11} ${y}c0-6 5-9 11-9s11 3 11 9z`} fill="#fdfbf7" />
+      <ellipse cx={x} cy={y + 10} rx={26} ry={16} fill="var(--h-gift)" opacity={0.08} stroke="none" />
+      <path d={`M${x - 11} ${y}c0-6 5-9 11-9s11 3 11 9z`} fill="var(--h-fill)" />
+      <path d={`M${x - 9} ${y}h18`} stroke="var(--h-gift)" />
       <path d={`M${x - 3} ${y + 2}h6`} opacity={0.6} />
     </g>
   );

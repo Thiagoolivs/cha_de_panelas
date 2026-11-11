@@ -28,7 +28,7 @@ export function Casar() {
               className="mx-auto aspect-[4/5] w-full max-w-[420px] object-cover"
             />
           ) : (
-            <div className="mx-auto flex aspect-[4/5] w-full max-w-[360px] items-center justify-center bg-olive-700 p-10">
+            <div className="mx-auto flex aspect-[4/5] w-full max-w-[360px] items-center justify-center bg-olive-900 p-10 outline outline-1 -outline-offset-8 outline-gold/40">
               <Rings className="w-full max-w-[220px]" />
             </div>
           )}

@@ -9,9 +9,9 @@ import { REST, applyJoints, approach, emptyRefs, poseJoints, type Joints, type R
 type Expr = "sorriso" | "surpresa" | "gargalhada";
 type Who = "kawany" | "nathan";
 
-const CREAM = "#fdfbf7";
-const SKIN = "#f8efe4";
-const TAN = "rgba(195,169,132,0.38)";
+const CREAM = "#f7f1e4";
+const SKIN = "#f3e2cf";
+const TAN = "#6b7340"; // colete musgo
 
 /* ---------- rostos ---------- */
 
@@ -48,14 +48,14 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
             <circle key={i} cx={x} cy={y} r={r} fill="none" />
           ))}
         </g>
-        <g fill="#cdb594" stroke="none">
+        <g fill="#8a6440" stroke="none">
           {CURLS.map(([x, y, r], i) => (
             <circle key={i} cx={x} cy={y} r={r} />
           ))}
         </g>
         <path d="M-15 -112c-2 2-2 5 0 6M15 -112c2 2 2 5 0 6M-17 -125c-2 2-2 4 0 6M17 -125c2 2 2 4 0 6M-6 -146c2-2 4-2 5 0M4 -146c2-2 4-2 5 0" opacity={0.55} />
         <ellipse cx={0} cy={-123} rx={12} ry={14.5} fill={SKIN} />
-        <path d="M-12 -129c2-6 7-9 12-9s10 3 12 9c-4-3-8-4-12-4s-8 1-12 4z" fill="#cdb594" />
+        <path d="M-12 -129c2-6 7-9 12-9s10 3 12 9c-4-3-8-4-12-4s-8 1-12 4z" fill="#8a6440" />
         {eyes}
         {mouth}
         <path d="M-8 -119h.1M8 -119h.1" stroke="#d9a796" strokeWidth={2.4} opacity={0.35} />
@@ -67,7 +67,7 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
       <ellipse cx={-13} cy={-123} rx={2.4} ry={3.6} fill={SKIN} />
       <ellipse cx={13} cy={-123} rx={2.4} ry={3.6} fill={SKIN} />
       <ellipse cx={0} cy={-124} rx={12.5} ry={15.5} fill={SKIN} />
-      <path d="M-13 -127c-1-10 4-17 13-17s14 6 13 17c-2-6-6-9-13-9s-11 3-13 9z" fill="rgba(90,96,48,0.55)" />
+      <path d="M-13 -127c-1-10 4-17 13-17s14 6 13 17c-2-6-6-9-13-9s-11 3-13 9z" fill="#3a3324" />
       {eyes}
       {mouth}
     </g>
@@ -160,20 +160,20 @@ function Nathan({ expr, set }: FigureProps) {
   return (
     <g ref={set("root")} style={{ opacity: 0 }}>
       {/* calça e sapatos (fora do giro do tronco) */}
-      <path d="M-11 -64L-10 -3H-2L0 -48 2 -3H10L11 -64z" fill="rgba(195,169,132,0.22)" />
-      <path d="M-11 -2c0-3 3-4 6-4h3v5h-9zM11 -2c0-3-3-4-6-4H2v5h9z" fill="var(--olive-700)" fillOpacity={0.55} />
+      <path d="M-11 -64L-10 -3H-2L0 -48 2 -3H10L11 -64z" fill="#4b5226" />
+      <path d="M-11 -2c0-3 3-4 6-4h3v5h-9zM11 -2c0-3-3-4-6-4H2v5h9z" fill="#1e2015" />
       <g ref={set("torso")}>
         {/* camisa */}
         <path d="M-12 -99L-11.5 -62H11.5L12 -99Q6 -102 3 -103H-3Q-6 -102-12 -99z" fill={CREAM} />
         <path d="M-3 -107v4M3 -107v4" />
         {/* colete */}
         <path d="M-11.5 -97L-11 -65L0 -61L11 -65L11.5 -97L5 -100L0 -84L-5 -100z" fill={TAN} />
-        <circle cx={0} cy={-78} r={0.9} fill="var(--olive-700)" />
-        <circle cx={0} cy={-72} r={0.9} fill="var(--olive-700)" />
-        <circle cx={0} cy={-66} r={0.9} fill="var(--olive-700)" />
+        <circle cx={0} cy={-78} r={0.9} fill="#d4b97e" />
+        <circle cx={0} cy={-72} r={0.9} fill="#d4b97e" />
+        <circle cx={0} cy={-66} r={0.9} fill="#d4b97e" />
         {/* gravata-borboleta */}
-        <path d="M0 -101.5l-6.5-3.5v7zM0 -101.5l6.5-3.5v7z" fill="var(--olive-700)" fillOpacity={0.75} />
-        <circle cx={0} cy={-101.5} r={1.4} fill="var(--olive-700)" />
+        <path d="M0 -101.5l-6.5-3.5v7zM0 -101.5l6.5-3.5v7z" fill="#b8975a" />
+        <circle cx={0} cy={-101.5} r={1.4} fill="#b8975a" />
         <g ref={set("lArm")}>
           <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
         </g>
@@ -279,7 +279,7 @@ export function Couple({ stage, poses, itemX, roomW, roomH }: CoupleProps) {
   const n = <Nathan key="n" who="nathan" expr={exprFor(stage, poses, "nathan")} set={nat.set} />;
   const k = <Kawany key="k" who="kawany" expr={exprFor(stage, poses, "kawany")} set={kaw.set} />;
   return (
-    <g aria-hidden="true" className="pointer-events-none" strokeWidth={1.2}>
+    <g aria-hidden="true" className="pointer-events-none" strokeWidth={1.2} stroke="#262a19">
       {hugging ? [k, n] : [n, k]}
     </g>
   );

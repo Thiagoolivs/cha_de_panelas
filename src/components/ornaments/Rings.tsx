@@ -1,7 +1,7 @@
 /** Alianças entrelaçadas em line-art creme. Reserva para a foto das mãos do convite. */
 export function Rings({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 200 160" className={className} aria-hidden="true" fill="none" stroke="var(--cream)" strokeWidth={1.4} strokeLinecap="round">
+    <svg viewBox="0 0 200 160" className={className} aria-hidden="true" fill="none" stroke="var(--gold-light)" strokeWidth={1.4} strokeLinecap="round">
       <ellipse cx="80" cy="96" rx="44" ry="44" />
       <ellipse cx="80" cy="96" rx="38" ry="38" opacity=".6" />
       <ellipse cx="124" cy="96" rx="44" ry="44" />

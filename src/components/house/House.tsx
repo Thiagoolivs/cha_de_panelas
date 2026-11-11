@@ -94,13 +94,15 @@ function RoomLayer({
         className="house-room"
       >
         <RoomShell box={b} floor={room === "cozinha" || room === "servico" ? "tile" : "wood"} />
-        <Furniture room={room} />
+        <g stroke="var(--h-line-soft, currentColor)">
+          <Furniture room={room} />
+        </g>
         <text
           x={back.x0 + 6}
           y={back.y0 - 8}
           fontSize={11}
           letterSpacing={2.2}
-          fill="var(--olive-700)"
+          fill="var(--gold-light)"
           stroke="none"
           style={{ fontFamily: "var(--font-montserrat)", textTransform: "uppercase", fontWeight: 500 }}
           aria-hidden="true"
@@ -131,6 +133,7 @@ function RoomLayer({
               }
             }}
             style={{ cursor: zoomed ? "pointer" : "zoom-in", outline: "none" }}
+            stroke="var(--h-gift, var(--olive-700))"
             className="house-item"
           >
             {glyph}
@@ -152,7 +155,7 @@ export const House = memo(
         viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`}
         className="lineart block h-auto w-full touch-manipulation select-none"
         fill="none"
-        stroke="var(--olive-700)"
+        stroke="var(--h-line, var(--olive-700))"
         strokeWidth={1.2}
         strokeLinecap="round"
         strokeLinejoin="round"

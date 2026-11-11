@@ -40,7 +40,7 @@ export function GiftList({ gifts, myIds, onChoose }: Props) {
               aria-pressed={active}
               onClick={() => setFilter(t)}
               className={`min-h-[40px] shrink-0 rounded-full border px-4 text-[0.82rem] whitespace-nowrap transition-colors ${
-                active ? "border-olive-700 bg-olive-700 text-cream" : "border-olive-700/40 text-olive-900 hover:border-olive-700"
+                active ? "border-olive-900 bg-olive-900 text-cream" : "border-olive-900/20 text-olive-900 hover:border-olive-900/60"
               }`}
             >
               {t === "all" ? giftsCopy.filterAll : TIER_LABEL[t].short}

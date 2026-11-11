@@ -82,10 +82,11 @@ interface Props {
   items?: readonly (keyof typeof U)[];
   /** "hang" pendura do topo (como no topo do convite); "stand" apoia na base. */
   mode?: "hang" | "stand";
+  color?: string;
 }
 
 /** Faixa de utensílios usada como divisor de seção e borda decorativa. */
-export function UtensilBand({ className, items = ORDER, mode = "hang" }: Props) {
+export function UtensilBand({ className, items = ORDER, mode = "hang", color = "var(--olive-700)" }: Props) {
   const gap = 46;
   const w = items.length * gap + 10;
   const tilt = [-6, 3, -2, 5, -4, 2, -5, 4];
@@ -96,7 +97,7 @@ export function UtensilBand({ className, items = ORDER, mode = "hang" }: Props) 
       className={className}
       aria-hidden="true"
       fill="none"
-      stroke="var(--olive-700)"
+      stroke={color}
       strokeWidth={1.4}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -117,7 +118,7 @@ export function UtensilBand({ className, items = ORDER, mode = "hang" }: Props) 
 }
 
 /** Canto decorativo: três utensílios em leque. */
-export function UtensilCorner({ className, flip = false }: { className?: string; flip?: boolean }) {
+export function UtensilCorner({ className, flip = false, color = "var(--olive-700)" }: { className?: string; flip?: boolean; color?: string }) {
   const set: (keyof typeof U)[] = ["concha", "fouet", "espatula"];
   return (
     <svg
@@ -125,7 +126,7 @@ export function UtensilCorner({ className, flip = false }: { className?: string;
       className={className}
       aria-hidden="true"
       fill="none"
-      stroke="var(--olive-700)"
+      stroke={color}
       strokeWidth={1.4}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -141,20 +142,20 @@ export function UtensilCorner({ className, flip = false }: { className?: string;
 }
 
 /** Ramo fino de folhas, para separar blocos de texto. */
-export function Sprig({ className }: { className?: string }) {
+export function Sprig({ className, color = "var(--tan)" }: { className?: string; color?: string }) {
   return (
     <svg
       viewBox="0 0 120 20"
       className={className}
       aria-hidden="true"
       fill="none"
-      stroke="var(--olive-700)"
+      stroke={color}
       strokeWidth={1}
       strokeLinecap="round"
     >
-      <path d="M4 10h112" opacity={0.5} />
+      <path d="M4 10h112" opacity={0.7} />
       <path d="M60 10c-6-6-12-7-18-6 4 5 11 7 18 6zM60 10c6-6 12-7 18-6-4 5-11 7-18 6z" />
-      <circle cx="60" cy="10" r="1.6" fill="var(--olive-700)" />
+      <circle cx="60" cy="10" r="1.6" fill={color} />
     </svg>
   );
 }

@@ -40,6 +40,27 @@ A Kawany mandou a lista real (mensagem e áudio de 10/11/2026). Ela substituiu a
 
 ## Identidade
 
+### Paleta "premium" (11/11/2026)
+
+O pedido foi deixar o visual mais premium, sem os tons pastéis. A paleta continua na família do convite (oliva, creme, marrom), mas com tons mais profundos e um acento de ouro:
+
+| Token | Antes | Agora | Uso |
+|---|---|---|---|
+| `--olive-900` | `#5a6030` | `#262a19` floresta | fundos escuros (hero, roteiro, rodapé, casinha), botões |
+| `--olive-700` | `#70773d` | `#4b5226` | títulos sobre marfim (7,2:1) |
+| `--cream` | `#fdfbf7` | `#f4eee2` marfim | fundo padrão |
+| `--card` | n/a | `#fbf8f1` | cards e modais |
+| `--board` | `#966639` | `#7a4826` conhaque | só a tábua da data |
+| `--tan` | `#c3a984` | `#b8975a` ouro envelhecido | filetes e detalhes (decorativo sobre marfim) |
+| `--gold-light` | n/a | `#d4b97e` | texto e traço sobre floresta (7,7:1) |
+
+- Botão principal: floresta com filete dourado interno; sobre fundo escuro, marfim. O marrom saiu dos botões.
+- A casinha virou uma cena "ao entardecer": fundo floresta com vinheta, estrutura em traço marfim suave e os **presentes em dourado**, que agora se destacam do resto. As janelas e a luminária têm um brilho quente.
+- Personagens com preenchimento sólido claro e traço floresta, como figuras de porcelana sobre o fundo escuro.
+- O hero ganhou moldura de filete duplo dourado, como um cartão de papelaria.
+
+### Base
+
 - A "paleta de cores" da página 5 do convite (branco, bege, cinza, preto) foi tratada como **dress code**. A identidade do site é oliva + creme + marrom.
 - Fontes: Cormorant Garamond (no lugar da The Seasons), Mrs Saint Delafield (assinatura) e Montserrat, via `next/font`.
 - Nenhum texto pequeno sobre `#828753`. Blocos com texto usam `#70773d`.

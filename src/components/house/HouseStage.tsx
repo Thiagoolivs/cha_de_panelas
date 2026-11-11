@@ -47,7 +47,7 @@ export function HouseStage() {
       <h2 id="casinha-title" className="sr-only">
         A casinha
       </h2>
-      <div className="relative -mx-4 overflow-hidden border-y border-olive-700/15 bg-cream sm:mx-0 sm:border">
+      <div className="house-theme relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-[2px] sm:shadow-[0_20px_50px_-24px_rgba(38,42,25,0.6)]">
         <House
           ref={svgRef}
           items={house}
@@ -65,7 +65,7 @@ export function HouseStage() {
           <button
             type="button"
             onClick={() => setUserFocus(null)}
-            className="absolute top-2 right-2 inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-olive-700/40 bg-cream/95 px-3 text-[0.78rem] text-olive-900 shadow-sm"
+            className="absolute top-2 right-2 inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-gold-light/40 bg-olive-900/80 px-3 text-[0.78rem] text-cream backdrop-blur"
           >
             <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.5}>
               <path d="M10 3L5 8l5 5" />
@@ -83,7 +83,7 @@ export function HouseStage() {
             aria-pressed={focus === r}
             onClick={() => setUserFocus(focus === r ? null : r)}
             className={`min-h-[40px] shrink-0 rounded-full border px-3.5 text-[0.8rem] whitespace-nowrap ${
-              focus === r ? "border-olive-700 bg-olive-700 text-cream" : "border-olive-700/35 text-olive-900"
+              focus === r ? "border-olive-900 bg-olive-900 text-cream" : "border-olive-900/20 text-olive-900"
             }`}
           >
             {ROOM_LABEL[r]} <span className="opacity-75">{counts.get(r)}/{totals.get(r)}</span>

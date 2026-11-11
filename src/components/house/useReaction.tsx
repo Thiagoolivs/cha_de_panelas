@@ -125,14 +125,14 @@ export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView
       {showLabel && (
         <motion.p
           key={phrase}
-          className="pointer-events-none absolute inset-x-0 top-[6%] px-6 text-center"
+          className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-[#1b1e12]/90 via-[#1b1e12]/70 to-transparent px-6 pt-3 pb-8 text-center"
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           aria-hidden="true"
         >
-          <span className="script inline-block rounded-[2px] bg-cream/90 px-4 pt-2 pb-1 text-[2.3rem] text-olive-700 shadow-[0_2px_16px_rgba(253,251,247,0.9)] sm:text-[2.9rem]">
+          <span className="script inline-block text-[2.1rem] leading-[1.05] text-gold-light sm:text-[2.9rem]">
             {phrase}
           </span>
         </motion.p>

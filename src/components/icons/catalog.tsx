@@ -6,9 +6,9 @@
  */
 import type { ReactNode } from "react";
 
-const F = { fill: "var(--icon-fill, #fdfbf7)" };
-const T = { fill: "var(--tan)", fillOpacity: 0.3 };
-const G = { fill: "#e9eef0", fillOpacity: 0.55 }; // vidro
+const F = { fill: "var(--icon-fill, #fbf8f1)" };
+const T = { fill: "var(--icon-accent, var(--tan))", fillOpacity: 0.3 };
+const G = { fill: "var(--icon-glass, rgba(75,82,38,0.07))" }; // vidro
 const soft = { opacity: 0.5 };
 
 export interface IconDef {

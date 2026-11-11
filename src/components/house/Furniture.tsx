@@ -5,14 +5,14 @@
 import type { Room } from "@/lib/types";
 import { Pendant } from "./RoomShell";
 
-const C = "#fdfbf7"; // creme
-const W = { fill: "rgba(195,169,132,0.32)" }; // madeira (tan sutil)
+const C = "var(--h-fill)"; // preenchimento dos móveis
+const W = { fill: "var(--h-wood)" }; // madeira
 const soft = { opacity: 0.5 };
 
 function Window({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} fill="#eef1ea" />
+      <rect x={x} y={y} width={w} height={h} fill="var(--h-glass)" />
       <path d={`M${x + 6} ${y + h - 10}c${w * 0.2} -8 ${w * 0.4} -10 ${w * 0.6} -6`} opacity={0.35} />
       <rect x={x} y={y} width={w} height={h} />
       <rect x={x + 3} y={y + 3} width={w - 6} height={h - 6} {...soft} />
@@ -117,7 +117,7 @@ function Service() {
       <path d="M100 54l-14 6 4 8 6-3v26h28V65l6 3 4-8-14-6c-2 4-6 5-10 5s-8-1-10-5z" fill={C} />
       <path d="M100 52v6M120 52v6" />
       {/* prateleira com frascos */}
-      <path d="M96 100h76v4H96z" fill="rgba(195,169,132,0.32)" />
+      <path d="M96 100h76v4H96z" fill="var(--h-wood)" />
       <path d="M104 100V86c0-3 2-4 4-4v-4h4v4c2 0 4 1 4 4v14z" fill={C} />
       <path d="M126 100V84h12v16zM129 84v-4h6v4" fill={C} />
       <path d="M150 100V90c0-3 3-5 6-5s6 2 6 5v10z" fill={C} />
@@ -132,7 +132,7 @@ function Service() {
       <circle cx="104" cy="143" r="2.4" />
       <path d="M120 143h24" {...soft} />
       <circle cx="123" cy="182" r="18" />
-      <circle cx="123" cy="182" r="12" fill="#eef1ea" />
+      <circle cx="123" cy="182" r="12" fill="var(--h-glass)" />
       <path d="M115 186c5 3 11 3 16-2" {...soft} />
     </g>
   );
@@ -156,22 +156,22 @@ export function HouseFrame() {
   return (
     <g>
       {/* telhado */}
-      <path d="M380 22L752 124H8z" fill="#faf6ee" />
+      <path d="M380 22L752 124H8z" fill="var(--h-ceil)" />
       <path d="M380 22L752 124H8z" strokeWidth={1.6} />
       <path d="M380 36L716 120H44z" {...soft} />
       {[0.25, 0.5, 0.75].map((t) => (
         <path key={t} d={`M${380 - 336 * t} ${36 + 84 * t}H${380 + 336 * t}`} opacity={0.18} />
       ))}
-      <path d="M590 70V40h26v37" fill="#faf6ee" />
-      <path d="M586 40h34v-6h-34z" fill="#faf6ee" />
-      <circle cx="380" cy="82" r="18" fill="#eef1ea" />
+      <path d="M590 70V40h26v37" fill="var(--h-ceil)" />
+      <path d="M586 40h34v-6h-34z" fill="var(--h-ceil)" />
+      <circle cx="380" cy="82" r="18" fill="var(--h-glass)" />
       <circle cx="380" cy="82" r="18" />
       <circle cx="380" cy="82" r="14" {...soft} />
       <path d="M380 68v28M366 82h28" {...soft} />
       {/* paredes externas e laje */}
       <path d="M24 120V646h712V120" strokeWidth={1.6} />
       <path d="M30 120V640h700V120" />
-      <path d="M24 376h712v8H24z" fill="#efe6d6" />
+      <path d="M24 376h712v8H24z" fill="var(--h-wood)" />
       <path d="M450 120v256M520 384v256" strokeWidth={1.4} />
       {/* chão e grama */}
       <path d="M0 646H760" strokeWidth={1.6} />
@@ -179,8 +179,8 @@ export function HouseFrame() {
       {[40, 120, 250, 520, 640, 720].map((x) => (
         <path key={x} d={`M${x} 646c1-5 3-8 5-9M${x + 4} 646c0-6 1-10 3-12M${x + 8} 646c0-4-1-7-3-9`} opacity={0.6} />
       ))}
-      <path d="M2 646c-2-14 6-24 14-22 2-8 14-10 18 0 8-2 12 8 8 22" fill="#f4f1e6" />
-      <path d="M758 646c2-14-6-24-14-22-2-8-14-10-18 0-8-2-12 8-8 22" fill="#f4f1e6" />
+      <path d="M2 646c-2-14 6-24 14-22 2-8 14-10 18 0 8-2 12 8 8 22" fill="var(--h-fill)" />
+      <path d="M758 646c2-14-6-24-14-22-2-8-14-10-18 0-8-2-12 8-8 22" fill="var(--h-fill)" />
     </g>
   );
 }
