@@ -1,52 +1,50 @@
-/**
- * Textos do site. Os trechos marcados [CONVITE] devem ser conferidos com o PDF do
- * convite quando ele estiver no repositório (ver DECISIONS.md).
- */
+/** Textos do site, tirados do convite (CONVITE CHÁ DE PANELA.pdf). */
 export const copy = {
   hero: {
-    eyebrow: "Você está convidado para o",
+    kicker: "de panela",
     title: "Chá dos Noivos",
-    addressSoon: "Endereço em breve",
+    addressSoon: "endereço em breve",
     ctaGifts: "Ver a lista de presentes",
     ctaMessage: "Deixar um recado",
   },
   casar: {
     title: "Vamos casar!",
-    // [CONVITE] substituir pelo texto exato da página 2.
-    body: [
-      "Depois de muitos cafés, algumas mudanças de planos e uma certeza só, a gente decidiu: vamos casar.",
-      "E toda casa nova começa pela cozinha. Por isso queremos você no nosso chá, para comer, rir das brincadeiras e ajudar a montar o nosso cantinho.",
-    ],
-    photoAlt: "Mãos do casal com a aliança de noivado",
+    body: "O nosso dia está chegando, e estamos cada vez mais felizes e ansiosos por esse momento! Gostaríamos muito de contar com você em mais um dia especial!",
+    photoAlt: "Mãos do casal com a aliança de noivado, com montanhas ao fundo",
   },
   roteiro: {
     title: "Roteiro",
-    // [CONVITE] conferir ordem e textos da página 3.
     items: [
-      { time: "14h", title: "Chegada", text: "Abraços, fotos e aquele café de boas-vindas." },
-      { time: "", title: "Comer, né", text: "Que o cabra não é de ferro." },
-      { time: "", title: "Brincadeiras", text: "Umas brincadeiras que a noiva inventou." },
-      { time: "", title: "Abertura dos presentes", text: "A parte em que a gente finge surpresa. Ou não." },
+      { text: "Comer né, que o cabra não é de ferro", img: "/assets/convite/roteiro-1.webp" },
+      { text: "Umas brincadeiras que a noiva inventou", img: "/assets/convite/roteiro-2.webp" },
+      { text: "Abertura dos presentes", img: "/assets/convite/roteiro-3.webp" },
     ],
   },
   comoFazerParte: {
-    title: "Como fazer parte",
-    intro: "A lista é simples e cada presente tem um lugar na nossa casa.",
-    videoSoon: "Vídeo do casal em breve",
-    steps: [
-      { title: "Escolha", text: "Veja a lista e escolha um presente. Ou mais de um, se quiser." },
-      { title: "Marque", text: "Diga seu nome e confirme. O presente sai da lista." },
-      { title: "Pronto", text: "Ele entra na nossa casinha. Leve no dia do chá." },
-    ],
-    privacy: "Os noivos não verão quem escolheu cada presente.",
+    title: "Como fazer parte?",
+    body: "Você deverá acessar o link abaixo, escolher o presente que deseja oferecer e colocar seu nome.",
+    cta: "Escolher meu presente",
+    videoSoon: "Aqui dentro um vídeo explicativo",
+    privacy: "Obs: Os noivos não verão quem escolheu cada presente.",
   },
+  vamo: { word: "VAMO?", cta: "VAMOS?????" },
   agenda: { button: "Adicionar à agenda" },
   pix: {
-    title: "Prefere Pix?",
-    intro: "Se for mais prático, dá para contribuir com qualquer valor. Algumas sugestões:",
-    copy: "Copiar chave Pix",
-    copied: "Chave copiada",
-    soon: "A chave Pix será divulgada em breve.",
+    title: "Caso você queira contribuir de outra forma...$$$",
+    label: "Nosso Pix",
+    copy: "Toque para copiar",
+    copied: "Copiado!",
+    soon: "Chave Pix em breve",
   },
-  footer: "Com carinho, Kaw e Than",
+  paleta: {
+    title: "Paleta de cores:",
+    note: "Para quem quiser combinar com a gente.",
+    colors: [
+      { name: "Branco", hex: "#ffffff" },
+      { name: "Bege", hex: "#c3a984" },
+      { name: "Cinza", hex: "#737373" },
+      { name: "Preto", hex: "#000000" },
+    ],
+  },
+  footer: "Kaw e Than",
 };

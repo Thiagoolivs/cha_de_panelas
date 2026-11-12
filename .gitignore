@@ -44,3 +44,6 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /e2e/__screens__/
+
+# convite original (fica só local; os assets extraídos ficam em public/assets/convite)
+/assets/*.pdf

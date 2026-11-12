@@ -1,28 +1,32 @@
-import { copy } from "@/content/copy";
-import { Sprig } from "@/components/ornaments/Utensils";
+"use client";
 
+/* eslint-disable @next/next/no-img-element */
+import { motion, useReducedMotion } from "framer-motion";
+import { copy } from "@/content/copy";
+
+/** Página 3 do convite: o roteiro, com os memes entrando como figurinhas. */
 export function Roteiro() {
+  const reduce = !!useReducedMotion();
   return (
-    <section aria-labelledby="roteiro-title" className="bg-olive-900 px-4 py-16 text-cream">
-      <div className="mx-auto max-w-xl">
-        <h2 id="roteiro-title" className="text-center font-serif text-[2rem] tracking-[0.16em] uppercase">
-          {copy.roteiro.title}
-        </h2>
-        <ol className="mt-8 space-y-0">
-          {copy.roteiro.items.map((it, i) => (
-            <li key={it.title} className="grid grid-cols-[3.2rem_1fr] gap-4 border-t border-gold/30 py-5 first:border-t-0">
-              <span className="font-serif text-[1.7rem] leading-none italic text-gold-light">
-                {it.time || String(i + 1).padStart(2, "0")}
-              </span>
-              <span>
-                <span className="block text-[0.82rem] font-medium tracking-[0.18em] uppercase">{it.title}</span>
-                <span className="mt-1 block text-[0.98rem] text-cream">{it.text}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-        <Sprig className="mx-auto mt-6 w-28" color="var(--gold-light)" />
-      </div>
+    <section aria-labelledby="roteiro-title" className="px-6 py-16">
+      <h2 id="roteiro-title" className="title-caps text-center text-[3.4rem]">
+        {copy.roteiro.title}
+      </h2>
+      <ol className="mx-auto mt-6 max-w-xs space-y-10">
+        {copy.roteiro.items.map((it, i) => (
+          <motion.li
+            key={it.text}
+            className="flex flex-col items-center text-center"
+            initial={reduce ? false : { opacity: 0, y: 40, rotate: i % 2 ? 6 : -6, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, rotate: i % 2 ? 2 : -2, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ type: "spring", stiffness: 140, damping: 14 }}
+          >
+            <p className="hand text-[1.45rem] leading-snug">{it.text}</p>
+            <img src={it.img} alt="" aria-hidden="true" loading="lazy" className="mt-3 aspect-square w-[62%] max-w-[200px] object-cover shadow-[0_8px_20px_-8px_rgba(31,28,24,0.45)]" />
+          </motion.li>
+        ))}
+      </ol>
     </section>
   );
 }

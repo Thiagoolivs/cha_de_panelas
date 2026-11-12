@@ -9,9 +9,9 @@ import { REST, applyJoints, approach, emptyRefs, poseJoints, type Joints, type R
 type Expr = "sorriso" | "surpresa" | "gargalhada";
 type Who = "kawany" | "nathan";
 
-const CREAM = "#f7f1e4";
+const CREAM = "#ffffff";
 const SKIN = "#f3e2cf";
-const TAN = "#6b7340"; // colete musgo
+const TAN = "#737373"; // colete cinza (paleta do convite)
 
 /* ---------- rostos ---------- */
 
@@ -74,15 +74,29 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
   );
 }
 
+/**
+ * Geometria do recorte de cada rosto: centro do rosto (fração da imagem), largura
+ * do rosto (fração) e proporção. Medido nos recortes do convite (scripts/extract_assets.py).
+ */
+const PHOTO = {
+  kawany: { cx: 0.71, cy: 0.32, face: 0.36, aspect: 594 / 520 },
+  nathan: { cx: 0.5, cy: 0.5, face: 0.85, aspect: 434 / 300 },
+} as const;
+const FACE_W = 26; // largura do rosto em unidades do personagem (cabeça ~1/3 do corpo)
+
 function Face({ who, expr }: { who: Who; expr: Expr }) {
   const photo = facePhoto(who, expr);
   if (photo) {
     // Foto do convite: pouca resolução, por isso a cabeça nunca passa de ~120 px CSS.
-    const w = who === "kawany" ? 58 : 46;
-    return <image href={photo} x={-w / 2} y={-152} width={w} height={54} preserveAspectRatio="xMidYMax meet" />;
+    const g = PHOTO[who];
+    const w = FACE_W / g.face;
+    const h = w * g.aspect;
+    return <image href={photo} x={-g.cx * w} y={-124 - g.cy * h} width={w} height={h} preserveAspectRatio="none" />;
   }
   return <DrawnFace who={who} expr={expr} />;
 }
+
+const HAS_PHOTO = { kawany: !!facePhoto("kawany", "sorriso"), nathan: !!facePhoto("nathan", "sorriso") };
 
 /* ---------- braços ---------- */
 
@@ -121,10 +135,16 @@ interface FigureProps {
 function Kawany({ expr, set }: FigureProps) {
   return (
     <g ref={set("root")} style={{ opacity: 0 }}>
-      {/* véu atrás de tudo */}
-      <path d="M-13 -142C-30 -118-34-86-31-56Q0-48 31-56C34-86 30-118 13-142Q0-148-13-142z" fill={CREAM} fillOpacity={0.9} strokeOpacity={0.55} />
-      <path d="M-18 -110C-22 -92-23 -76-22 -60M18 -110C22 -92 23 -76 22 -60" opacity={0.3} />
       <g ref={set("torso")}>
+        {/* véu atrás de tudo: o desenhado do convite, ou um traço simples de reserva */}
+        {HAS_PHOTO.kawany ? (
+          <image href="/assets/convite/veu.webp" x={-28} y={-158} width={64} height={83} preserveAspectRatio="none" />
+        ) : (
+          <>
+            <path d="M-13 -142C-30 -118-34-86-31-56Q0-48 31-56C34-86 30-118 13-142Q0-148-13-142z" fill={CREAM} fillOpacity={0.9} strokeOpacity={0.55} />
+            <path d="M-18 -110C-22 -92-23 -76-22 -60M18 -110C22 -92 23 -76 22 -60" opacity={0.3} />
+          </>
+        )}
         {/* saia evasê */}
         <path d="M-9 -86C-13 -58-26 -28-31 -2Q0 4 31 -2C26 -28 13 -58 9 -86z" fill={CREAM} />
         <path d="M-4 -80C-8 -56-12 -30-13 -2M4 -80C8 -56 12 -30 13 -2" opacity={0.35} />
@@ -133,16 +153,10 @@ function Kawany({ expr, set }: FigureProps) {
         <path d="M-9 -86H9" strokeWidth={1.6} />
         <path d="M-3 -104v5M3 -104v5" />
         <path d="M-3 -100h6" stroke={SKIN} strokeWidth={3} />
-        <g ref={set("lArm")}>
-          <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
-        </g>
-        <g ref={set("rArm")}>
-          <Arm side="r" sleeve={CREAM} bindForearm={set("rFore")} />
-        </g>
         <g ref={set("head")}>
           <Face who="kawany" expr={expr} />
-          {/* três florzinhas no véu */}
-          {[-11, 0, 11].map((x, i) => (
+          {/* três florzinhas no véu (só no rosto desenhado; o véu do convite já tem) */}
+          {!HAS_PHOTO.kawany && [-11, 0, 11].map((x, i) => (
             <g key={x} transform={`translate(${x} ${i === 1 ? -150 : -147})`}>
               {[0, 72, 144, 216, 288].map((a) => (
                 <circle key={a} cx={2.4 * Math.cos((a * Math.PI) / 180)} cy={2.4 * Math.sin((a * Math.PI) / 180)} r={1.7} fill={CREAM} />
@@ -150,6 +164,12 @@ function Kawany({ expr, set }: FigureProps) {
               <circle r={1} fill="var(--tan)" stroke="none" />
             </g>
           ))}
+        </g>
+        <g ref={set("lArm")}>
+          <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
+        </g>
+        <g ref={set("rArm")}>
+          <Arm side="r" sleeve={CREAM} bindForearm={set("rFore")} />
         </g>
       </g>
     </g>
@@ -160,7 +180,7 @@ function Nathan({ expr, set }: FigureProps) {
   return (
     <g ref={set("root")} style={{ opacity: 0 }}>
       {/* calça e sapatos (fora do giro do tronco) */}
-      <path d="M-11 -64L-10 -3H-2L0 -48 2 -3H10L11 -64z" fill="#4b5226" />
+      <path d="M-11 -64L-10 -3H-2L0 -48 2 -3H10L11 -64z" fill="#2b2b24" />
       <path d="M-11 -2c0-3 3-4 6-4h3v5h-9zM11 -2c0-3-3-4-6-4H2v5h9z" fill="#1e2015" />
       <g ref={set("torso")}>
         {/* camisa */}
@@ -168,20 +188,19 @@ function Nathan({ expr, set }: FigureProps) {
         <path d="M-3 -107v4M3 -107v4" />
         {/* colete */}
         <path d="M-11.5 -97L-11 -65L0 -61L11 -65L11.5 -97L5 -100L0 -84L-5 -100z" fill={TAN} />
-        <circle cx={0} cy={-78} r={0.9} fill="#d4b97e" />
-        <circle cx={0} cy={-72} r={0.9} fill="#d4b97e" />
-        <circle cx={0} cy={-66} r={0.9} fill="#d4b97e" />
-        {/* gravata-borboleta */}
-        <path d="M0 -101.5l-6.5-3.5v7zM0 -101.5l6.5-3.5v7z" fill="#b8975a" />
-        <circle cx={0} cy={-101.5} r={1.4} fill="#b8975a" />
+        <circle cx={0} cy={-78} r={0.9} fill="#fff" />
+        <circle cx={0} cy={-72} r={0.9} fill="#fff" />
+        <circle cx={0} cy={-66} r={0.9} fill="#fff" />
+        <g ref={set("head")}>
+          <Face who="nathan" expr={expr} />
+        </g>
+        {/* gravata-borboleta do convite */}
+        <image href="/assets/convite/gravata.svg" x={-10} y={-108} width={20} height={15.5} preserveAspectRatio="none" />
         <g ref={set("lArm")}>
           <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
         </g>
         <g ref={set("rArm")}>
           <Arm side="r" sleeve={CREAM} bindForearm={set("rFore")} />
-        </g>
-        <g ref={set("head")}>
-          <Face who="nathan" expr={expr} />
         </g>
       </g>
     </g>
@@ -255,9 +274,9 @@ export function Couple({ stage, poses, itemX, roomW, roomH }: CoupleProps) {
         // abraço: os dois se aproximam do meio
         // abraço: ao lado do item, nunca na frente dele
         const mid = Math.max(margin + 18, Math.min(roomW - margin - 18, itemX < roomW / 2 ? itemX + 74 : itemX - 74));
-        const hugX = (side === "left" ? mid - 18 : mid + 18) - myX;
+        const hugX = (side === "left" ? mid - 23 : mid + 23) - myX;
         const clap = pose === "palma" ? Math.max(0, Math.sin((inStage / 1000) * Math.PI * 2 * 3)) * 4 : 0;
-        const target: Joints = { ...REST, ...poseJoints(pose, side, tilt, side === "left" ? 36 : -36, clap) };
+        const target: Joints = { ...REST, ...poseJoints(pose, side, tilt, side === "left" ? 46 : -46, clap) };
         if (pose === "abraco") target.x = hugX;
         const hidden = st === "zoom" || st === "drop" || st === "exit" || st === "idle";
         target.op = hidden ? 0 : 1;
@@ -279,7 +298,7 @@ export function Couple({ stage, poses, itemX, roomW, roomH }: CoupleProps) {
   const n = <Nathan key="n" who="nathan" expr={exprFor(stage, poses, "nathan")} set={nat.set} />;
   const k = <Kawany key="k" who="kawany" expr={exprFor(stage, poses, "kawany")} set={kaw.set} />;
   return (
-    <g aria-hidden="true" className="pointer-events-none" strokeWidth={1.2} stroke="#262a19">
+    <g aria-hidden="true" className="pointer-events-none" strokeWidth={1.2} stroke="#1f1c18">
       {hugging ? [k, n] : [n, k]}
     </g>
   );

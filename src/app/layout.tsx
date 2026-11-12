@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { site } from "@/config/site";
 import { Providers } from "@/components/Providers";
 import { DemoPanelLoader } from "@/components/demo/DemoPanelLoader";
-import { cormorant, montserrat, script } from "./fonts";
+import { display, hand, montserrat, script } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,14 +20,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#262a19",
+  themeColor: "#fdfcf9",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${montserrat.variable} ${script.variable}`}>
+    <html lang="pt-BR" className={`${display.variable} ${montserrat.variable} ${script.variable} ${hand.variable}`}>
       <body>
         <Providers>
           {children}

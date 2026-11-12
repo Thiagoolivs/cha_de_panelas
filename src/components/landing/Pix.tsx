@@ -1,12 +1,16 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { site } from "@/config/site";
 import { copy } from "@/content/copy";
 
-const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+const brl = (v: number) => `R$ ${v},00`;
 
+/** Final da página 2 do convite: cotas com memes, etiquetas e a chave Pix. */
 export function Pix() {
+  const reduce = !!useReducedMotion();
   const [copied, setCopied] = useState(false);
   const key = site.pix.key;
 
@@ -23,40 +27,56 @@ export function Pix() {
       ta.remove();
     }
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 2400);
+    window.setTimeout(() => setCopied(false), 2200);
   }
 
   return (
-    <section aria-labelledby="pix-title" className="px-4 py-14">
-      <div className="mx-auto max-w-xl">
-        <h2 id="pix-title" className="title-caps text-center text-[1.9rem]">
-          {copy.pix.title}
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-center">{copy.pix.intro}</p>
-        <ul className="mt-8 divide-y divide-olive-700/20 border-y border-olive-700/20">
-          {site.pix.quotas.map((q) => (
-            <li key={q.value} className="flex items-baseline gap-4 py-4">
-              <span className="w-[4.6rem] shrink-0 font-serif text-[1.5rem] text-olive-700">{brl(q.value)}</span>
-              <span className="text-[0.98rem]">{q.label}</span>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-8 text-center">
-          {key ? (
-            <>
-              {site.pix.holder && <p className="text-sm text-olive-900">{site.pix.holder}</p>}
-              <p className="mt-1 font-mono text-[0.95rem] break-all">{key}</p>
-              <button type="button" onClick={onCopy} className="btn btn-outline mt-4">
-                {copy.pix.copy}
-              </button>
-              <p aria-live="polite" className="mt-2 h-6 text-sm text-olive-900">
-                {copied ? copy.pix.copied : ""}
-              </p>
-            </>
-          ) : (
-            <p className="text-sm italic text-olive-900">{copy.pix.soon}</p>
-          )}
-        </div>
+    <section aria-labelledby="pix-title" className="bg-green-ui px-5 pt-16 pb-20 text-white">
+      <h2 id="pix-title" className="mx-auto max-w-xs text-center font-display text-[1.75rem] leading-[1] uppercase">
+        {copy.pix.title}
+      </h2>
+      <ul className="mx-auto mt-12 grid max-w-sm grid-cols-2 gap-x-5 gap-y-12">
+        {site.pix.quotas.map((q, i) => (
+          <motion.li
+            key={q.value}
+            className="relative text-center"
+            initial={reduce ? false : { opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.5, delay: (i % 2) * 0.12 }}
+          >
+            <img src={q.img} alt="" aria-hidden="true" loading="lazy" className="mx-auto aspect-square w-full object-cover" />
+            <motion.span
+              className="sticker absolute -top-5 right-[-10%] text-[1.35rem]"
+              initial={reduce ? false : { scale: 0, rotate: -40 }}
+              whileInView={{ scale: 1, rotate: 14 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ type: "spring", stiffness: 260, damping: 12, delay: 0.25 + (i % 2) * 0.12 }}
+            >
+              {brl(q.value)}
+            </motion.span>
+            <p className="hand mt-2 text-[1.12rem] leading-tight">{q.label}</p>
+          </motion.li>
+        ))}
+      </ul>
+
+      <div className="mt-16 flex flex-col items-center">
+        <span className="sticker relative z-10 -mb-2 -rotate-6 text-[1.4rem] uppercase">{copy.pix.label}</span>
+        {key ? (
+          <button
+            type="button"
+            onClick={onCopy}
+            className="bg-ink px-5 py-3 font-hand text-[1.9rem] tracking-[0.12em] text-white active:scale-95"
+            aria-label={`Copiar chave Pix ${site.pix.display ?? key}`}
+          >
+            {site.pix.display ?? key}
+          </button>
+        ) : (
+          <p className="bg-ink px-5 py-3 text-white">{copy.pix.soon}</p>
+        )}
+        <p aria-live="polite" className="hand mt-3 h-7 text-[1.2rem]">
+          {key ? (copied ? copy.pix.copied : copy.pix.copy) : ""}
+        </p>
       </div>
     </section>
   );

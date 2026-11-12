@@ -1,11 +1,23 @@
+import Link from "next/link";
+import { site } from "@/config/site";
 import { copy } from "@/content/copy";
-import { UtensilBand } from "@/components/ornaments/Utensils";
+import { BorderLine } from "@/components/ornaments/BorderLine";
 
 export function Footer() {
   return (
-    <footer className="bg-olive-900 px-4 pt-10 pb-12 text-center">
-      <UtensilBand className="mx-auto block h-[110px] w-full max-w-[380px]" mode="stand" color="var(--gold-light)" items={["colher", "faca", "garfo", "rolo", "concha", "espatula", "fouet"]} />
-      <p className="script mt-4 text-[2.8rem] text-gold-light">{copy.footer}</p>
+    <footer className="px-4 pt-4 pb-10 text-center">
+      <div className="flex flex-col items-center gap-2">
+        <a href="/agenda.ics" className="btn btn-outline w-full max-w-[300px]" download>
+          {copy.agenda.button}
+        </a>
+        <Link href="/recado" className="btn btn-ghost">
+          {copy.hero.ctaMessage}
+        </Link>
+      </div>
+      <p className="script mt-8 text-[3rem] text-ink" aria-label={site.couple.short}>
+        {copy.footer}
+      </p>
+      <BorderLine className="mt-4" inView />
     </footer>
   );
 }

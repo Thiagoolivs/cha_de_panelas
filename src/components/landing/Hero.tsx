@@ -1,53 +1,105 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/config/site";
 import { copy } from "@/content/copy";
-import { DateBoard } from "@/components/ornaments/Board";
-import { UtensilBand, UtensilCorner } from "@/components/ornaments/Utensils";
+import { BorderLine } from "@/components/ornaments/BorderLine";
 
-const GOLD = "var(--gold-light)";
+const spring = { type: "spring" as const, stiffness: 170, damping: 16 };
 
+/** Página 1 do convite, animada. */
 export function Hero() {
+  const reduce = !!useReducedMotion();
+  const pop = (delay: number, from: Record<string, number> = { y: 24, scale: 0.85 }) =>
+    reduce ? {} : { initial: { opacity: 0, ...from }, animate: { opacity: 1, y: 0, scale: 1, rotate: 0, x: 0 }, transition: { ...spring, delay } };
+  const float = (d: number) =>
+    reduce ? {} : { animate: { y: [0, -6, 0] }, transition: { duration: 4 + d, repeat: Infinity, ease: "easeInOut" as const, delay: 1.6 + d } };
+
   return (
-    <header className="relative overflow-hidden bg-olive-900 px-4 pt-7 pb-16 text-cream sm:pt-9">
-      {/* moldura de filete dourado, como um cartão de papelaria */}
-      <div className="pointer-events-none absolute inset-3 border border-gold/40 sm:inset-5" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-[18px] border border-gold/20 sm:inset-[26px]" aria-hidden="true" />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{ background: "radial-gradient(ellipse 70% 55% at 50% 38%, rgba(107,115,64,0.35), transparent 70%)" }}
+    <header className="relative overflow-hidden px-4 pt-4 pb-6">
+      {/* utensílios pendurados do topo */}
+      <motion.img
+        src="/assets/convite/utensilios-pote.svg"
+        alt=""
         aria-hidden="true"
+        className="absolute top-1 left-[6%] w-[22%] max-w-[120px] origin-top"
+        {...(reduce ? {} : { initial: { y: -80, rotate: -18 }, animate: { y: 0, rotate: 0 }, transition: { type: "spring", stiffness: 90, damping: 9, delay: 0.1 } })}
+      />
+      <motion.img
+        src="/assets/convite/utensilios-panelas.svg"
+        alt=""
+        aria-hidden="true"
+        className="absolute top-0 right-[3%] w-[34%] max-w-[190px] origin-top"
+        {...(reduce ? {} : { initial: { y: -90, rotate: 16 }, animate: { y: 0, rotate: 0 }, transition: { type: "spring", stiffness: 80, damping: 9, delay: 0.25 } })}
       />
 
-      <UtensilBand className="relative mx-auto block h-[92px] w-full max-w-[400px] sm:h-[120px] sm:max-w-[520px]" mode="hang" color={GOLD} />
-      <UtensilCorner className="pointer-events-none absolute top-44 left-10 hidden w-[140px] opacity-50 md:block lg:left-[9%]" color={GOLD} />
-      <UtensilCorner className="pointer-events-none absolute top-44 right-10 hidden w-[140px] opacity-50 md:block lg:right-[9%]" flip color={GOLD} />
-
-      <div className="relative mx-auto mt-6 max-w-md text-center">
-        <p className="text-[0.68rem] font-medium tracking-[0.34em] text-gold-light uppercase">{copy.hero.eyebrow}</p>
-        <h1 className="mt-4 font-serif text-[2.9rem] leading-[0.95] font-medium tracking-[0.08em] uppercase sm:text-[3.8rem]">
+      <div className="relative mx-auto max-w-[460px] pt-[27vw] text-center sm:pt-[130px]">
+        <motion.p className="hand ml-[24%] -mb-1 w-fit -rotate-12 text-[clamp(1.3rem,6vw,1.8rem)]" {...pop(0.5, { y: -10 })}>
+          {copy.hero.kicker}
+        </motion.p>
+        <motion.h1
+          className="title-caps text-[clamp(2.35rem,10.6vw,4.2rem)] whitespace-nowrap"
+          {...(reduce ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, ease: [0.2, 0.7, 0.2, 1] as const, delay: 0.3 } })}
+        >
           {copy.hero.title}
-        </h1>
-        <p className="script mt-5 text-[4.6rem] text-gold-light sm:text-[5.6rem]" aria-label={site.couple.short}>
+        </motion.h1>
+        <motion.p
+          className="script relative -mt-[0.3em] text-[clamp(3rem,14vw,5.4rem)] text-ink"
+          aria-label={site.couple.short}
+          {...(reduce
+            ? {}
+            : { initial: { clipPath: "inset(0 100% 0 0)" }, animate: { clipPath: "inset(0 0% 0 0)" }, transition: { duration: 1.4, ease: "easeInOut" as const, delay: 0.7 } })}
+        >
           {site.couple.short}
-        </p>
+        </motion.p>
 
-        <div className="mt-7">
-          <DateBoard day={site.event.dayLabel} month={site.event.monthLabel} time={site.event.timeLabel} />
+        {/* o casal, nas proporções da página 1 do convite: rosto em foto, véu e gravata */}
+        <div className="relative mx-auto mt-[2%] aspect-[500/235] w-full">
+          <motion.div className="absolute top-[2%] left-[10%] w-[44%]" {...pop(1.0)}>
+            <motion.div {...float(0)} className="relative">
+              <img src="/assets/convite/veu.webp" alt="" aria-hidden="true" className="absolute -top-[5%] left-[22%] w-[78%] max-w-none" />
+              <img src="/assets/convite/rosto-kawany.webp" alt="Kawany" className="relative w-full" />
+            </motion.div>
+          </motion.div>
+          <motion.div className="absolute top-[4%] left-[57%] w-[22%]" {...pop(1.2)}>
+            <motion.div {...float(0.6)} className="relative">
+              <img src="/assets/convite/rosto-nathan.webp" alt="Nathan" className="relative w-full" />
+              <img src="/assets/convite/gravata.svg" alt="" aria-hidden="true" className="absolute top-[78%] left-[2%] w-[84%] max-w-none" />
+            </motion.div>
+          </motion.div>
         </div>
 
-        <p className="mt-6 font-serif text-[1.15rem] italic text-cream">
-          {site.event.address ?? copy.hero.addressSoon}
-        </p>
+        {/* tábua com a data */}
+        <motion.div
+          className="relative mx-auto mt-[6%] w-[min(58vw,250px)] -rotate-[11deg]"
+          {...(reduce ? {} : { initial: { opacity: 0, y: -40, rotate: 10 }, animate: { opacity: 1, y: 0, rotate: -11 }, transition: { type: "spring", stiffness: 120, damping: 11, delay: 1.5 } })}
+        >
+          <img src="/assets/convite/tabua.svg" alt="" aria-hidden="true" className="w-full drop-shadow-[0_6px_10px_rgba(31,28,24,0.18)]" />
+          <p className="absolute inset-y-0 left-[9%] flex w-[58%] flex-col items-center justify-center font-display leading-[1.05] text-cream">
+            <span className="text-[clamp(1.15rem,5.4vw,1.6rem)] uppercase">
+              {site.event.dayLabel} de {site.event.monthLabel}
+            </span>
+            <span className="hand text-[clamp(1.1rem,5vw,1.5rem)]">{site.event.timeLabel}</span>
+          </p>
+        </motion.div>
 
-        <div className="mt-9 flex flex-col items-center gap-2">
-          <Link href="/presentes" className="btn btn-light w-full max-w-[300px]">
+        <motion.p className="hand mt-5 text-[1.3rem]" {...pop(1.8, { y: 8 })}>
+          {site.event.address ?? copy.hero.addressSoon}
+        </motion.p>
+
+        <motion.div className="mt-6 flex flex-col items-center gap-1" {...pop(2.0, { y: 10 })}>
+          <Link href="/presentes" className="btn btn-primary w-full max-w-[300px]">
             {copy.hero.ctaGifts}
           </Link>
-          <Link href="/recado" className="btn btn-ghost text-gold-light decoration-gold-light/50">
+          <Link href="/recado" className="btn btn-ghost">
             {copy.hero.ctaMessage}
           </Link>
-        </div>
+        </motion.div>
       </div>
+
+      <BorderLine className="mt-6" delay={1.2} />
     </header>
   );
 }

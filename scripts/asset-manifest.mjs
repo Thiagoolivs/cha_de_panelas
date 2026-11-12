@@ -8,7 +8,7 @@ const pub = join(root, "public");
 const has = (p) => (existsSync(join(pub, p)) ? "/" + p : null);
 
 const expr = (who) => ({
-  sorriso: has(`assets/fotos/${who}-sorriso.webp`) ?? has(`assets/convite/${who}.webp`),
+  sorriso: has(`assets/fotos/${who}-sorriso.webp`) ?? has(`assets/convite/rosto-${who}.webp`),
   surpresa: has(`assets/fotos/${who}-surpresa.webp`),
   gargalhada: has(`assets/fotos/${who}-gargalhada.webp`),
 });
@@ -17,8 +17,8 @@ const manifest = {
   faces: { kawany: expr("kawany"), nathan: expr("nathan") },
   hands: has("assets/convite/maos.webp"),
   utensils: {
-    top: has("assets/convite/utensilios-topo.png"),
-    bottom: has("assets/convite/utensilios-rodape.png"),
+    top: has("assets/convite/utensilios-pote.svg"),
+    bottom: has("assets/convite/utensilios-borda.svg"),
   },
 };
 

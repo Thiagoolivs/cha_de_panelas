@@ -13,12 +13,14 @@
     "og": "node scripts/og.mjs"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.8.2",
     "framer-motion": "^12.43.0",
     "next": "16.4.6",
     "pg": "^8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.16",
@@ -28,6 +30,7 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.180.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.3",

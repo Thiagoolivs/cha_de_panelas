@@ -1,19 +1,19 @@
 {
   "faces": {
     "kawany": {
-      "sorriso": null,
+      "sorriso": "/assets/convite/rosto-kawany.webp",
       "surpresa": null,
       "gargalhada": null
     },
     "nathan": {
-      "sorriso": null,
+      "sorriso": "/assets/convite/rosto-nathan.webp",
       "surpresa": null,
       "gargalhada": null
     }
   },
-  "hands": null,
+  "hands": "/assets/convite/maos.webp",
   "utensils": {
-    "top": null,
-    "bottom": null
+    "top": "/assets/convite/utensilios-pote.svg",
+    "bottom": "/assets/convite/utensilios-borda.svg"
   }
 }

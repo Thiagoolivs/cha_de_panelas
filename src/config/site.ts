@@ -22,12 +22,14 @@ export const site = {
   },
   pix: {
     key: env(process.env.NEXT_PUBLIC_PIX_KEY),
+    /** Como a chave aparece na tela (ex.: telefone formatado). */
+    display: env(process.env.NEXT_PUBLIC_PIX_DISPLAY),
     holder: env(process.env.NEXT_PUBLIC_PIX_HOLDER),
     quotas: [
-      { value: 50, label: "Só pra não dizer que não dei nada" },
-      { value: 100, label: "Creme de cabelo para a noiva cacheada" },
-      { value: 150, label: "Primeira conta de luz" },
-      { value: 250, label: "Para você ganhar todas as brincadeiras" },
+      { value: 50, label: "Só pra não dizer que não dei nada", img: "/assets/convite/pix-50.webp" },
+      { value: 100, label: "Creme de cabelo para a noiva cacheada", img: "/assets/convite/pix-100.webp" },
+      { value: 150, label: "Primeira conta de Luz", img: "/assets/convite/pix-150.webp" },
+      { value: 250, label: "para você ganhar todas as brincadeiras", img: "/assets/convite/pix-250.webp" },
     ],
   },
   /** Pessoa de confiança que tira dúvidas de estilo com a noiva sem revelar quem deu. */

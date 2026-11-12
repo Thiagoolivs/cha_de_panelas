@@ -10,8 +10,8 @@ test("landing mostra o convite e oferece a agenda", async ({ page, request }) =>
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   await expect(page.getByRole("heading", { level: 1, name: /Chá dos Noivos/i })).toBeVisible();
   await expect(page.getByText("Kaw e Than").first()).toBeVisible();
-  await expect(page.getByText("Endereço em breve")).toBeVisible();
-  await expect(page.getByText("Os noivos não verão quem escolheu cada presente.")).toBeVisible();
+  await expect(page.getByText("endereço em breve")).toBeVisible();
+  await expect(page.getByText(/Os noivos não verão quem escolheu cada presente/).first()).toBeAttached();
   const ics = await request.get("/agenda.ics");
   expect(ics.headers()["content-type"]).toContain("text/calendar");
   expect(await ics.text()).toContain("DTSTART:20261212T170000Z");
