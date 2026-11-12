@@ -1,4 +1,15 @@
 import type { Gift, ReactionCategory, Room, Tier } from "@/lib/types";
+import photos from "./gift-photos.json";
+
+/** Foto de cada presente (opcional) com crédito da licença. Gerado por scripts/fotos-presentes. */
+export interface GiftPhoto {
+  src: string;
+  title?: string;
+  author: string;
+  license: string;
+  url: string;
+}
+export const giftPhotos = photos as Record<string, GiftPhoto>;
 
 /**
  * Lista de presentes da Kawany (novembro de 2026).
@@ -104,7 +115,7 @@ export const defaultGifts: Gift[] = tiers.flatMap(([tier, rows]) =>
     searchQuery,
     phrase,
     featuredUrl: null,
-    image: null,
+    image: giftPhotos[id]?.src ?? null,
     order: order++,
     tier,
   })),

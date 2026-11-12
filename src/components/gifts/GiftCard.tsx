@@ -27,10 +27,10 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
       data-gift={gift.id}
     >
       <div className="flex gap-4">
-        <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center bg-cream">
+        <div className="flex h-[96px] w-[96px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-cream">
           {gift.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={gift.image} alt="" className="h-full w-full object-cover" loading="lazy" />
+            <img src={gift.image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
           ) : (
             <GiftIcon iconKey={gift.iconKey} className="h-[60px] w-[60px]" />
           )}
