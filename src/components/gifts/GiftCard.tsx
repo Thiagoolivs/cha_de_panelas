@@ -2,6 +2,8 @@
 
 import type { GiftView } from "@/lib/types";
 import { storeLinks } from "@/lib/links";
+import { doubtLink } from "@/lib/contact";
+import { site } from "@/config/site";
 import { GiftIcon } from "@/components/icons/GiftIcon";
 import { giftsCopy } from "@/content/gifts-copy";
 
@@ -15,6 +17,7 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
   const soldOut = gift.remaining <= 0;
   const disabled = soldOut || isMine;
   const links = storeLinks(gift);
+  const doubt = doubtLink(gift.title);
   const titleId = `gift-${gift.id}`;
 
   return (
@@ -61,6 +64,22 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
           </button>
         )}
       </div>
+
+      {doubt && !soldOut && (
+        <a
+          href={doubt}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex min-h-[44px] items-center justify-center gap-2 self-center text-[0.9rem] font-medium text-olive-700"
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z" />
+            <path d="M9.5 9.5c0 3 2 5 5 5l1-1.5-1.8-1-1 .8c-.9-.4-1.6-1.1-2-2l.8-1-1-1.8z" />
+          </svg>
+          Tirar dúvida com a {site.styleContact.name}
+          <span className="sr-only"> sobre {gift.title} (abre o WhatsApp)</span>
+        </a>
+      )}
 
       {!soldOut && (
         <div className="mt-3 flex flex-wrap items-center gap-x-4 text-[0.8rem]">

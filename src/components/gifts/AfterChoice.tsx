@@ -4,13 +4,12 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { GiftView } from "@/lib/types";
 import { giftsCopy } from "@/content/gifts-copy";
+import { doubtLink } from "@/lib/contact";
 
 /** Depois de escolher: contato para dúvidas de estilo e convite discreto para o recado. */
 export function AfterChoice({ gift, onDismiss }: { gift: GiftView; onDismiss(): void }) {
   const contact = site.styleContact;
-  const wa = contact.phone
-    ? `https://wa.me/${contact.phone.replace(/\D/g, "")}?text=${encodeURIComponent(giftsCopy.styleMessage(contact.name, gift.title))}`
-    : null;
+  const wa = doubtLink(gift.title);
   return (
     <section aria-label="Próximos passos" className="relative border-l-2 border-olive-700 bg-white/70 py-4 pr-12 pl-4">
       <p className="font-serif text-[1.25rem] leading-tight text-olive-700">{giftsCopy.ok(gift.title)}</p>

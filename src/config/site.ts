@@ -34,7 +34,7 @@ export const site = {
   },
   /** Pessoa de confiança que tira dúvidas de estilo com a noiva sem revelar quem deu. */
   styleContact: {
-    name: env(process.env.NEXT_PUBLIC_STYLE_CONTACT_NAME) ?? "Ra",
+    name: env(process.env.NEXT_PUBLIC_STYLE_CONTACT_NAME) ?? "Rayssa",
     phone: env(process.env.NEXT_PUBLIC_STYLE_CONTACT_PHONE),
   },
   videoUrl: env(process.env.NEXT_PUBLIC_VIDEO_URL),
