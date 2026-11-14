@@ -51,6 +51,19 @@ describe("SqlGiftsStore (Postgres)", () => {
     expect(snap.gifts.find((g) => g.id === "bule")?.status).toBe("reservado");
   });
 
+  it("zera reservas e recados uma única vez por chave", async () => {
+    const db = pglite();
+    const a = new SqlGiftsStore(db, defaultGifts);
+    await a.reserve("bule", "Teste");
+    await a.sendMessage({ authorName: "Teste", text: "Recado de teste antes do convite sair." });
+    const b = new SqlGiftsStore(db, defaultGifts, "convite-2026-11-14");
+    expect((await b.houseState()).length).toBe(0);
+    expect((await b.adminView()).messages.length).toBe(0);
+    await b.reserve("bule", "Convidada de verdade");
+    const c = new SqlGiftsStore(db, defaultGifts, "convite-2026-11-14");
+    expect((await c.houseState()).find((h) => h.giftId === "bule")?.count).toBe(1);
+  });
+
   it("listGifts e houseState nunca trazem nomes", async () => {
     await store.reserve("mixer", "Nome Único");
     expect(JSON.stringify(await store.listGifts())).not.toContain("Nome Único");

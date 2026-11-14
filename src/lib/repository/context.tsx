@@ -132,6 +132,17 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
     [repo, myGifts, persistMine, refresh],
   );
 
+  // Ao abrir o site, esquece escolhas que não existem mais no servidor (ex.: banco zerado
+  // antes do convite). Só na primeira carga, para não brigar com uma reserva recém-feita.
+  const reconciled = useRef(false);
+  useEffect(() => {
+    if (!gifts || reconciled.current) return;
+    reconciled.current = true;
+    const valid = myGifts.filter((m) => (gifts.find((g) => g.id === m.giftId)?.reserved ?? 0) > 0);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (valid.length !== myGifts.length) persistMine(valid);
+  }, [gifts, myGifts, persistMine]);
+
   const sendMessage = useCallback((m: Message) => repo.sendMessage(m), [repo]);
   const clearReaction = useCallback(() => setReaction(null), []);
 

@@ -94,6 +94,7 @@ function RoomLayer({
         className="house-room"
       >
         <RoomShell box={b} floor={room === "cozinha" || room === "servico" ? "tile" : "wood"} />
+        <ellipse cx={b.w / 2} cy={b.h * 0.32} rx={b.w * 0.52} ry={b.h * 0.6} fill="url(#room-glow)" stroke="none" />
         <g stroke="var(--h-line-soft, currentColor)">
           <Furniture room={room} />
         </g>
@@ -162,6 +163,12 @@ export const House = memo(
         role="group"
         aria-label="Casinha dos noivos"
       >
+        <defs>
+          <radialGradient id="room-glow">
+            <stop offset="0%" stopColor="#fff4d6" stopOpacity="0.26" />
+            <stop offset="100%" stopColor="#fff4d6" stopOpacity="0" />
+          </radialGradient>
+        </defs>
         <HouseFrame />
         {ROOMS.map((room) => (
           <RoomLayer

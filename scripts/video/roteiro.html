@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=390" />
+<title>Como fazer parte · vídeo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Gochi+Hand&family=Montserrat:wght@400;500;700&family=Waterfall&display=block" />
+<style>
+  /* Animação determinística: render(t) desenha o quadro do instante t (segundos).
+     scripts/video/render.cjs captura quadro a quadro e o ffmpeg monta o mp4. */
+  :root { --olive: #70773d; --green: #747a46; --cream: #fdfcf9; --ink: #1f1c18; --board: #966639; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 390px; height: 844px; overflow: hidden; }
+  body { background: var(--cream) url(/assets/convite/papel.jpg); background-size: 390px auto; font-family: Montserrat, sans-serif; color: var(--ink); }
+  .scene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 70px 28px 0; opacity: 0; }
+  .step { font-family: "Gochi Hand", cursive; font-size: 24px; color: var(--olive); }
+  .title { font-family: "Gilda Display", serif; text-transform: uppercase; color: var(--olive); font-size: 46px; line-height: .95; text-align: center; }
+  .script { font-family: Waterfall, cursive; letter-spacing: .2em; font-size: 56px; }
+  .lead { font-size: 21px; font-weight: 500; text-align: center; line-height: 1.35; margin-top: 18px; }
+  .phone { position: relative; width: 250px; height: 470px; margin-top: 34px; border: 9px solid var(--ink); border-radius: 38px; background: var(--cream) url(/assets/convite/papel.jpg); background-size: 250px auto; overflow: hidden; box-shadow: 0 30px 50px -24px rgba(0,0,0,.45); }
+  .notch { position: absolute; top: 6px; left: 50%; width: 80px; height: 16px; margin-left: -40px; border-radius: 10px; background: var(--ink); z-index: 3; }
+  .btn { display: flex; align-items: center; justify-content: center; height: 46px; border-radius: 999px; background: var(--olive); color: #fff; font-weight: 700; font-size: 11px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 8px 22px -12px rgba(0,0,0,.35); padding: 14px; }
+  .finger { position: absolute; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.6); border: 3px solid var(--olive); z-index: 5; pointer-events: none; }
+  .wa { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 22px; border-radius: 999px; background: #1f7a4a; color: #fff; font-weight: 700; font-size: 17px; }
+  .bubble { background: #fff; border-radius: 18px 18px 18px 4px; padding: 14px 16px; font-size: 16px; line-height: 1.4; box-shadow: 0 8px 22px -12px rgba(0,0,0,.35); min-height: 70px; }
+  .progress { position: absolute; left: 28px; right: 28px; top: 30px; height: 4px; border-radius: 4px; background: rgba(112,119,61,.18); }
+  .progress i { display: block; height: 100%; border-radius: 4px; background: var(--olive); }
+</style>
+</head>
+<body>
+<div class="progress"><i id="bar"></i></div>
+
+<!-- 1. abertura -->
+<section class="scene" id="s1" style="padding-top:150px">
+  <p class="step" id="s1k">vem ver como é fácil</p>
+  <h1 class="title" style="margin-top:8px">Como fazer parte?</h1>
+  <p class="script" id="s1s" style="margin-top:6px">Kaw e Than</p>
+  <div style="position:relative;width:300px;height:190px;margin-top:20px">
+    <img id="s1a" src="/assets/fotos/kawany-sorriso.webp" style="position:absolute;left:10px;top:0;width:165px" />
+    <img id="s1b" src="/assets/fotos/nathan-sorriso.webp" style="position:absolute;right:30px;top:6px;width:84px" />
+  </div>
+</section>
+
+<!-- 2. abrir a lista -->
+<section class="scene" id="s2">
+  <p class="step">passo 1</p>
+  <p class="lead">Abra o link e toque em<br /><b>“Ver a lista de presentes”</b></p>
+  <div class="phone"><div class="notch"></div>
+    <div style="padding:46px 18px 0;text-align:center">
+      <p class="title" style="font-size:30px">Chá dos Noivos</p>
+      <p class="script" style="font-size:34px;margin-top:2px">Kaw e Than</p>
+      <img src="/assets/convite/tabua.svg" style="width:140px;margin:22px auto 0;display:block;transform:rotate(-11deg)" />
+      <div class="btn" id="s2btn" style="margin-top:34px">Ver a lista de presentes</div>
+    </div>
+    <div class="finger" id="s2f"></div>
+  </div>
+</section>
+
+<!-- 3. escolher -->
+<section class="scene" id="s3">
+  <p class="step">passo 2</p>
+  <p class="lead">Escolha um presente.<br />Pode escolher mais de um!</p>
+  <div class="phone"><div class="notch"></div>
+    <div id="s3list" style="padding:40px 14px 0">
+      <div class="card" style="display:flex;gap:10px;align-items:center"><img src="/assets/presentes/jogo-de-tacas.webp" style="width:60px;height:60px;border-radius:10px;object-fit:cover" /><b style="font-family:'Gilda Display';font-weight:400;font-size:18px">Jogo de taças</b></div>
+      <div class="card" style="margin-top:12px">
+        <div style="display:flex;gap:10px;align-items:center"><img src="/assets/presentes/frigideira.webp" style="width:70px;height:70px;border-radius:10px;object-fit:cover" /><div><b style="font-family:'Gilda Display';font-weight:400;font-size:20px">Frigideira</b><p style="font-size:12px;margin-top:2px">Antiaderente, de preferência.</p></div></div>
+        <div class="btn" id="s3btn" style="margin-top:12px;height:40px;font-size:10px">Escolher este presente</div>
+      </div>
+      <div class="card" style="margin-top:12px;display:flex;gap:10px;align-items:center"><img src="/assets/presentes/bule.webp" style="width:60px;height:60px;border-radius:10px;object-fit:cover" /><b style="font-family:'Gilda Display';font-weight:400;font-size:18px">Bule de chá</b></div>
+    </div>
+    <div class="finger" id="s3f"></div>
+  </div>
+</section>
+
+<!-- 4. nome e confirmar -->
+<section class="scene" id="s4">
+  <p class="step">passo 3</p>
+  <p class="lead">Coloque seu nome e confirme.</p>
+  <div class="phone"><div class="notch"></div>
+    <div style="position:absolute;inset:0;background:rgba(31,28,24,.35)"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;background:var(--cream);border-radius:22px 22px 0 0;padding:20px 16px 22px">
+      <p class="title" style="font-size:22px">Confirmar presente</p>
+      <p style="font-size:12px;margin-top:12px;font-weight:500">Seu nome</p>
+      <div style="margin-top:6px;height:42px;border:1.5px solid rgba(112,119,61,.5);border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 10px;font-size:15px"><span id="s4name"></span><span id="s4caret" style="width:1.5px;height:20px;background:var(--ink);margin-left:1px"></span></div>
+      <p style="font-size:13px;margin-top:12px;line-height:1.35">Você vai dar <b style="color:var(--olive)">Frigideira</b>. Os noivos não vão saber que foi você.</p>
+      <div class="btn" id="s4btn" style="margin-top:14px;height:42px">Confirmar</div>
+    </div>
+    <div class="finger" id="s4f"></div>
+  </div>
+  <p class="step" id="s4s" style="margin-top:18px">segredo guardado!</p>
+</section>
+
+<!-- 5. casinha -->
+<section class="scene" id="s5">
+  <p class="step">pronto!</p>
+  <p class="lead">O presente entra na<br />casinha dos noivos.</p>
+  <div style="position:relative;width:320px;height:330px;margin-top:30px">
+    <svg viewBox="0 0 320 300" width="320" height="300" fill="none" stroke="#fdfcf9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;inset:0">
+      <rect x="0" y="0" width="320" height="300" rx="18" fill="#828753" stroke="none" />
+      <path d="M160 26L292 96H28z" fill="#777d48" />
+      <rect x="44" y="96" width="232" height="180" fill="#868c58" />
+      <path d="M44 186H276M160 96V276" />
+      <path d="M70 186V150h70v36" opacity=".7" />
+      <path d="M182 176h70" />
+      <circle cx="160" cy="66" r="11" />
+      <text x="160" y="92" text-anchor="middle" font-family="Waterfall" font-size="17" fill="#fff" stroke="none" letter-spacing="2">Kaw e Than</text>
+    </svg>
+    <img id="s5gift" src="/assets/presentes/frigideira.webp" style="position:absolute;left:192px;top:110px;width:52px;height:52px;border-radius:10px;border:3px solid #fff;object-fit:cover" />
+    <img id="s5a" src="/assets/fotos/kawany-sorriso.webp" style="position:absolute;left:58px;top:196px;width:76px" />
+    <img id="s5b" src="/assets/fotos/nathan-sorriso.webp" style="position:absolute;left:206px;top:200px;width:40px" />
+  </div>
+  <p class="step" id="s5s" style="margin-top:2px;font-size:28px;color:var(--ink);text-align:center;line-height:1.15">Alguém vai cozinhar. Nós, talvez.</p>
+</section>
+
+<!-- 6. dúvida -->
+<section class="scene" id="s6" style="padding-top:150px">
+  <p class="step">ficou em dúvida?</p>
+  <p class="lead">Cor, tamanho ou modelo?<br />A Rayssa pergunta pra noiva<br /><b>sem contar quem vai dar.</b></p>
+  <div class="wa" id="s6btn" style="margin-top:44px">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+    Fale com a Rayssa
+  </div>
+  <div class="bubble" id="s6msg" style="margin-top:30px;max-width:300px;align-self:center"></div>
+</section>
+
+<!-- 7. recado -->
+<section class="scene" id="s7" style="padding-top:150px">
+  <p class="step">e tem mais</p>
+  <p class="lead">Deixe um recado para a Kawany.<br /><span style="font-weight:400;font-size:17px">Ele vai só para ela.</span></p>
+  <div class="bubble" id="s7msg" style="margin-top:40px;width:300px;font-family:'Gochi Hand';font-size:22px"></div>
+</section>
+
+<!-- 8. encerramento -->
+<section class="scene" id="s8" style="padding-top:170px">
+  <p class="title" style="font-size:40px">Obrigado por<br />fazer parte!</p>
+  <p class="script" style="margin-top:10px">Kaw e Than</p>
+  <div style="position:relative;width:200px;margin-top:26px" id="s8b">
+    <img src="/assets/convite/tabua.svg" style="width:200px;display:block" />
+    <p style="position:absolute;inset:0 30% 0 8%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fdfcf9;font-family:'Gilda Display';font-size:24px;line-height:1">12 DE DEZ<span style="font-family:'Gochi Hand';font-size:20px;margin-top:4px">às 14h</span></p>
+  </div>
+</section>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const clamp = (v) => Math.max(0, Math.min(1, v));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const back = (x) => { const c = 1.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const SCENES = [["s1", 0, 4.2], ["s2", 4.2, 9.6], ["s3", 9.6, 15], ["s4", 15, 21.4], ["s5", 21.4, 26.8], ["s6", 26.8, 32], ["s7", 32, 36.6], ["s8", 36.6, 40.5]];
+  window.DURATION = 40.5;
+  function show(el, t, a, b) {
+    const i = ease(seg(t, a, a + 0.5)), o = ease(seg(t, b - 0.45, b));
+    el.style.opacity = String(i * (1 - o));
+    el.style.transform = `translateY(${(1 - i) * 26 - o * 18}px)`;
+  }
+  function pop(el, t, at, dur = 0.55, rot = 0) {
+    const k = seg(t, at, at + dur), s = k === 0 ? 0 : back(k);
+    el.style.opacity = String(Math.min(1, k * 3));
+    el.style.transform = `scale(${Math.max(0, s)}) rotate(${(1 - k) * rot}deg)`;
+  }
+  function tap(f, btn, t, at, frameEl) {
+    const r = btn.getBoundingClientRect(), p = frameEl.getBoundingClientRect();
+    const x = r.left - p.left + r.width / 2 - 23, y = r.top - p.top + r.height / 2 - 23;
+    const k = seg(t, at - 0.6, at), press = seg(t, at, at + 0.25) * (1 - seg(t, at + 0.25, at + 0.5));
+    f.style.left = x + (1 - ease(k)) * 60 + "px";
+    f.style.top = y + (1 - ease(k)) * 90 + "px";
+    f.style.opacity = String(seg(t, at - 0.6, at - 0.3) * (1 - seg(t, at + 0.6, at + 0.9)));
+    f.style.transform = `scale(${1 - press * 0.25})`;
+    btn.style.transform = `scale(${1 - press * 0.06})`;
+    btn.style.filter = press > 0 ? `brightness(${1 - press * 0.2})` : "";
+  }
+  function type(el, text, t, a, cps = 16) { el.textContent = text.slice(0, Math.floor(Math.max(0, t - a) * cps)); }
+
+  window.render = (t) => {
+    $("bar").style.width = (t / window.DURATION) * 100 + "%";
+    for (const [id, a, b] of SCENES) show($(id), t, a, b);
+    // 1
+    pop($("s1a"), t, 1.0, 0.6, -8); pop($("s1b"), t, 1.25, 0.6, 8);
+    $("s1s").style.clipPath = `inset(0 ${100 - ease(seg(t, 0.4, 1.6)) * 100}% 0 0)`;
+    const fl = Math.sin(t * 2.2) * 4; $("s1a").style.translate = `0 ${fl}px`; $("s1b").style.translate = `0 ${-fl}px`;
+    // 2
+    tap($("s2f"), $("s2btn"), t, 7.2, $("s2f").parentElement);
+    // 3
+    $("s3list").style.transform = `translateY(${-ease(seg(t, 10.4, 11.6)) * 40}px)`;
+    tap($("s3f"), $("s3btn"), t, 13.2, $("s3f").parentElement);
+    // 4
+    type($("s4name"), "Tia Lúcia", t, 16.2, 7);
+    $("s4caret").style.opacity = String(Math.floor(t * 2.4) % 2 ? 0 : 1);
+    tap($("s4f"), $("s4btn"), t, 19.0, $("s4f").parentElement);
+    pop($("s4s"), t, 19.4, 0.5, -6);
+    // 5
+    const d = seg(t, 22.4, 23.1); const dy = d < 1 ? -140 * (1 - ease(d)) : 0;
+    const settle = seg(t, 23.1, 23.6); const sq = Math.sin(settle * Math.PI) * 0.08;
+    $("s5gift").style.transform = `translateY(${dy}px) scale(${1 + sq}, ${1 - sq})`;
+    $("s5gift").style.opacity = String(seg(t, 22.3, 22.5));
+    pop($("s5a"), t, 23.4, 0.5, -10); pop($("s5b"), t, 23.6, 0.5, 10);
+    $("s5s").style.clipPath = `inset(0 ${100 - ease(seg(t, 24.0, 25.2)) * 100}% 0 0)`;
+    // 6
+    const pulse = 1 + Math.max(0, Math.sin((t - 28) * 4)) * 0.05 * seg(t, 27.6, 28);
+    $("s6btn").style.transform = `scale(${pulse})`;
+    type($("s6msg"), "Oi, Rayssa! Vou dar a frigideira. Como a noiva prefere: cor, tamanho, modelo?", t, 28.6, 22);
+    // 7
+    type($("s7msg"), "Kaw, que a casa de vocês seja cheia de amor e de café!", t, 33.2, 18);
+    // 8
+    pop($("s8b"), t, 37.4, 0.6, -14);
+  };
+  window.render(0);
+</script>
+</body>
+</html>

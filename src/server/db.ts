@@ -29,6 +29,6 @@ export function getStore(): SqlGiftsStore {
       }
     },
   };
-  store = new SqlGiftsStore(db, defaultGifts);
+  store = new SqlGiftsStore(db, defaultGifts, process.env.DATA_RESET_KEY ?? null);
   return store;
 }

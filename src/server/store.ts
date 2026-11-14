@@ -22,6 +22,10 @@ create table if not exists reservations (
   created_at timestamptz not null default now()
 );
 create index if not exists reservations_gift_idx on reservations (gift_id);
+create table if not exists app_meta (
+  key text primary key,
+  value text not null
+);
 create table if not exists messages (
   id bigserial primary key,
   author_name text not null,
@@ -58,11 +62,31 @@ export class SqlGiftsStore {
   constructor(
     private readonly db: Db,
     private readonly gifts: Gift[],
+    /** Se definido e diferente do último aplicado, zera reservas e recados uma única vez. */
+    private readonly resetKey: string | null = null,
   ) {}
 
   private ensure() {
-    this.ready ??= this.db.query(SCHEMA).then(() => undefined);
+    this.ready ??= this.db.query(SCHEMA).then(() => this.applyReset());
     return this.ready;
+  }
+
+  /** Limpeza única (ex.: apagar os testes antes de enviar o convite). Idempotente por chave. */
+  private async applyReset() {
+    const key = this.resetKey?.trim();
+    if (!key) return;
+    await this.db.tx(async (q) => {
+      await q.query("select pg_advisory_xact_lock($1)", [hash32("app:reset")]);
+      const { rows } = await q.query<{ value: string }>("select value from app_meta where key = 'last_reset'");
+      if (rows[0]?.value === key) return;
+      await q.query("delete from reservations");
+      await q.query("delete from messages");
+      await q.query(
+        "insert into app_meta (key, value) values ('last_reset', $1) on conflict (key) do update set value = excluded.value",
+        [key],
+      );
+      console.log("[store] dados zerados (chave", key + ")");
+    });
   }
 
   private gift(id: string) {

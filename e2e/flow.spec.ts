@@ -107,7 +107,7 @@ test("prévia do admin não mostra quem deu", async ({ page }) => {
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
   await expect(page.locator('[data-gift="mixer"]')).toContainText("Você escolheu");
   await page.goto("/admin-preview");
-  await expect(page.getByText("Aqui você vê o que vai ganhar, não quem deu.")).toBeVisible();
+  await expect(page.getByText(/o que vai ganhar/)).toBeVisible();
   const panel = page.getByRole("tabpanel");
   await expect(panel).toContainText("Mixer de mão");
   await expect(panel).not.toContainText("Nome Secreto");

@@ -79,8 +79,8 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
  * do rosto (fração) e proporção. Medido nos recortes do convite (scripts/extract_assets.py).
  */
 const PHOTO = {
-  kawany: { cx: 0.51, cy: 0.4, face: 0.42, aspect: 516 / 560 },
-  nathan: { cx: 0.5, cy: 0.58, face: 0.88, aspect: 467 / 320 },
+  kawany: { cx: 0.51, cy: 0.32, face: 0.38, aspect: 516 / 560 },
+  nathan: { cx: 0.5, cy: 0.34, face: 0.88, aspect: 467 / 320 },
 } as const;
 const FACE_W = 26; // largura do rosto em unidades do personagem (cabeça ~1/3 do corpo)
 
@@ -146,7 +146,7 @@ function Kawany({ expr, set }: FigureProps) {
       <g ref={set("torso")}>
         {/* véu atrás de tudo: o desenhado do convite, ou um traço simples de reserva */}
         {HAS_PHOTO.kawany ? (
-          <image href="/assets/convite/veu.webp" x={-31} y={-162} width={68} height={88} preserveAspectRatio="none" />
+          <image href="/assets/convite/veu.webp" x={-30} y={-151} width={66} height={86} preserveAspectRatio="none" />
         ) : (
           <>
             <path d="M-13 -142C-30 -118-34-86-31-56Q0-48 31-56C34-86 30-118 13-142Q0-148-13-142z" fill={CREAM} fillOpacity={0.9} strokeOpacity={0.55} />

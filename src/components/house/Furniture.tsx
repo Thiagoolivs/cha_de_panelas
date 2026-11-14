@@ -9,6 +9,29 @@ const C = "var(--h-fill)"; // preenchimento dos móveis
 const W = { fill: "var(--h-wood)" }; // madeira
 const soft = { opacity: 0.5 };
 
+const LEAF = "#a9af78"; // folhas (oliva claro)
+const POT = "#b07a4f"; // vasinhos de barro
+
+/** Vasinho com folhas, com a base em (x, y). */
+function Plant({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M-3 -8c-6-4-7-12-3-16 2 5 3 10 3 16zM3 -8c6-4 7-12 3-16-2 5-3 10-3 16zM0 -9c-2-7-1-14 2-17 1 6 0 12-2 17z" fill={LEAF} />
+      <path d="M-5 -8h10l-1.5 8h-7z" fill={POT} />
+    </g>
+  );
+}
+
+function Curtains({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+  return (
+    <g>
+      <path d={`M${x - 8} ${y - 4}H${x + w + 8}`} strokeWidth={1.4} />
+      <path d={`M${x - 6} ${y - 4}h${w * 0.24}c-2 ${h * 0.4}-1 ${h * 0.75} ${w * 0.06} ${h + 6}h-${w * 0.3}c-2-${h * 0.4} 0-${h * 0.8}-${w * 0.0} -${h + 6}z`} fill="#fdfcf9" fillOpacity={0.55} />
+      <path d={`M${x + w + 6} ${y - 4}h-${w * 0.24}c2 ${h * 0.4} 1 ${h * 0.75}-${w * 0.06} ${h + 6}h${w * 0.3}c2-${h * 0.4} 0-${h * 0.8} 0-${h + 6}z`} fill="#fdfcf9" fillOpacity={0.55} />
+    </g>
+  );
+}
+
 function Window({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
   return (
     <g>
@@ -18,6 +41,7 @@ function Window({ x, y, w, h }: { x: number; y: number; w: number; h: number }) 
       <rect x={x + 3} y={y + 3} width={w - 6} height={h - 6} {...soft} />
       <path d={`M${x + w / 2} ${y + 3}V${y + h - 3}M${x + 3} ${y + h / 2}H${x + w - 3}`} />
       <path d={`M${x - 4} ${y + h}h${w + 8}v3h-${w + 8}z`} fill={C} />
+      <Curtains x={x} y={y} w={w} h={h} />
     </g>
   );
 }
@@ -35,8 +59,21 @@ function Kitchen() {
       <path d="M140 78H384" strokeWidth={1.6} />
       <circle cx="140" cy="78" r="2" fill={C} />
       <circle cx="384" cy="78" r="2" fill={C} />
-      {/* azulejo atrás da bancada */}
-      <path d="M138 120H400M138 136H400" opacity={0.18} />
+      {/* azulejos atrás da bancada */}
+      <g opacity={0.16}>
+        <path d="M138 118H402M138 130H402M138 142H402" />
+        {Array.from({ length: 17 }, (_, i) => (
+          <path key={i} d={`M${138 + i * 16} 118V154`} />
+        ))}
+      </g>
+      {/* relógio */}
+      <circle cx="249" cy="46" r="9" fill={C} />
+      <circle cx="249" cy="46" r="6.5" opacity={0.4} />
+      <path d="M249 46V41M249 46l3.5 2" />
+      {/* temperinhos no parapeito */}
+      <Plant x={171} y={70} s={0.55} />
+      <Plant x={195} y={70} s={0.6} />
+      <Plant x={219} y={70} s={0.55} />
       {/* fogão com forno */}
       <rect x="76" y="154" width="62" height="62" fill={C} />
       <path d="M76 160h62" />
@@ -65,7 +102,16 @@ function Kitchen() {
 function Copa() {
   return (
     <g>
+      {/* tapete sob a mesa */}
+      <ellipse cx="210" cy="247" rx="118" ry="10" fill="#fdfcf9" fillOpacity={0.12} />
+      <ellipse cx="210" cy="247" rx="108" ry="7" opacity={0.35} />
       <Window x={178} y={44} w={64} h={80} />
+      {/* quadrinho com coração */}
+      <rect x="298" y="62" width="28" height="24" fill={C} />
+      <rect x="301" y="65" width="22" height="18" opacity={0.5} />
+      <path d="M312 79c-6-4-8-7-6-10 1.5-2 4.5-2 6 1 1.5-3 4.5-3 6-1 2 3 0 6-6 10z" fill="#fdfcf9" fillOpacity={0.7} />
+      {/* planta no canto */}
+      <Plant x={398} y={254} s={1.6} />
       {/* cristaleira */}
       <path d="M62 58h98v6H62z" {...W} />
       <rect x="66" y="64" width="90" height="152" fill={C} />
@@ -98,6 +144,9 @@ function Pantry() {
       {[74, 122, 170].map((y) => (
         <path key={y} d={`M50 ${y}h180v4H50z`} {...W} />
       ))}
+      {[[60, 78], [200, 78], [70, 126], [205, 126], [62, 174], [208, 174]].map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="10" height="5" rx="1" fill="#fdfcf9" fillOpacity={0.5} />
+      ))}
       {/* cesto de vime e saco de arroz no chão, sob a estante */}
       <path d="M66 216l4-24h40l4 24z" fill={C} />
       <path d="M68 200h44M69 208h42" {...soft} />
@@ -121,6 +170,8 @@ function Service() {
       <path d="M104 100V86c0-3 2-4 4-4v-4h4v4c2 0 4 1 4 4v14z" fill={C} />
       <path d="M126 100V84h12v16zM129 84v-4h6v4" fill={C} />
       <path d="M150 100V90c0-3 3-5 6-5s6 2 6 5v10z" fill={C} />
+      <Window x={40} y={70} w={36} h={26} />
+      <Plant x={140} y={136} s={0.6} />
       {/* tanque */}
       <path d="M36 146h52l-3 24H39z" fill={C} />
       <path d="M40 150h44" {...soft} />
@@ -159,15 +210,29 @@ export function HouseFrame() {
       <path d="M380 22L752 124H8z" fill="var(--h-ceil)" />
       <path d="M380 22L752 124H8z" strokeWidth={1.6} />
       <path d="M380 36L716 120H44z" {...soft} />
-      {[0.25, 0.5, 0.75].map((t) => (
-        <path key={t} d={`M${380 - 336 * t} ${36 + 84 * t}H${380 + 336 * t}`} opacity={0.18} />
-      ))}
+      {[0.3, 0.55, 0.8].map((t) => {
+        const half = 336 * t;
+        const y = 36 + 84 * t;
+        const n = Math.round((half * 2) / 18);
+        const step = (half * 2) / n;
+        let d = `M${380 - half} ${y}`;
+        for (let i = 0; i < n; i++) d += `q${step / 2} 6 ${step} 0`;
+        return <path key={t} d={d} opacity={0.22} />;
+      })}
       <path d="M590 70V40h26v37" fill="var(--h-ceil)" />
       <path d="M586 40h34v-6h-34z" fill="var(--h-ceil)" />
-      <circle cx="380" cy="82" r="18" fill="var(--h-glass)" />
-      <circle cx="380" cy="82" r="18" />
-      <circle cx="380" cy="82" r="14" {...soft} />
-      <path d="M380 68v28M366 82h28" {...soft} />
+      <circle cx="380" cy="64" r="14" fill="var(--h-glass)" />
+      <circle cx="380" cy="64" r="14" />
+      <path d="M380 51v26M367 64h26" {...soft} />
+      <text x="380" y="110" textAnchor="middle" fontSize="30" fill="#ffffff" stroke="none" style={{ fontFamily: "var(--font-script)", letterSpacing: "0.1em" }} aria-hidden="true">
+        Kaw e Than
+      </text>
+      {/* fumacinha da chaminé */}
+      <g className="house-smoke" fill="#fdfcf9" fillOpacity={0.35} stroke="none">
+        <circle cx="603" cy="28" r="5" />
+        <circle cx="609" cy="16" r="6.5" />
+        <circle cx="603" cy="2" r="8" />
+      </g>
       {/* paredes externas e laje */}
       <path d="M24 120V646h712V120" strokeWidth={1.6} />
       <path d="M30 120V640h700V120" />
@@ -178,6 +243,15 @@ export function HouseFrame() {
       <path d="M8 660H752" opacity={0.4} />
       {[40, 120, 250, 520, 640, 720].map((x) => (
         <path key={x} d={`M${x} 646c1-5 3-8 5-9M${x + 4} 646c0-6 1-10 3-12M${x + 8} 646c0-4-1-7-3-9`} opacity={0.6} />
+      ))}
+      {[50, 110, 165, 230, 300, 380, 455, 520, 590, 650, 715].map((x, i) => (
+        <g key={x} transform={`translate(${x} ${657 - (i % 2) * 3})`}>
+          <path d="M0 6v-6" opacity={0.6} />
+          {[0, 72, 144, 216, 288].map((a) => (
+            <circle key={a} cx={2.2 * Math.cos((a * Math.PI) / 180)} cy={-2 + 2.2 * Math.sin((a * Math.PI) / 180)} r={1.7} fill="#fdfcf9" stroke="none" />
+          ))}
+          <circle cx={0} cy={-2} r={1.1} fill="#e2c58a" stroke="none" />
+        </g>
       ))}
       <path d="M2 646c-2-14 6-24 14-22 2-8 14-10 18 0 8-2 12 8 8 22" fill="var(--h-fill)" />
       <path d="M758 646c2-14-6-24-14-22-2-8-14-10-18 0-8-2-12 8-8 22" fill="var(--h-fill)" />
