@@ -113,12 +113,25 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
       const result = await repo.reserve(giftId, name);
       if (result.status === "ok") {
         persistMine([...myGifts, { giftId, token: result.token }]);
-        requestReaction(giftId);
+        // Atualização otimista: o presente já aparece na lista e na casinha, sem esperar
+        // a ida e volta ao servidor (no celular isso atrasava tudo). A reação dos noivos é
+        // disparada por quem chamou, quando a casinha estiver visível.
+        setGifts((gs) =>
+          gs?.map((g) => (g.id === giftId ? { ...g, reserved: g.reserved + 1, remaining: Math.max(0, g.remaining - 1) } : g)) ?? gs,
+        );
+        setHouse((hs) => {
+          const found = hs.find((h) => h.giftId === giftId);
+          if (found) return hs.map((h) => (h.giftId === giftId ? { ...h, count: h.count + 1 } : h));
+          const g = gifts?.find((x) => x.id === giftId);
+          return g ? [...hs, { giftId, room: g.room, slot: g.slot, iconKey: g.iconKey, count: 1 }] : hs;
+        });
+        void refresh();
+      } else {
+        await refresh();
       }
-      await refresh();
       return result;
     },
-    [repo, guestName, myGifts, persistMine, refresh, requestReaction],
+    [repo, guestName, myGifts, persistMine, refresh, gifts],
   );
 
   const undo = useCallback(

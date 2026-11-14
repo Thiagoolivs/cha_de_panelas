@@ -19,8 +19,27 @@ const HouseStage = dynamic(() => import("@/components/house/HouseStage").then((m
   loading: () => <div className="aspect-[760/668] w-full animate-pulse bg-olive-700/5" aria-hidden="true" />,
 });
 
+/** Espera o elemento chegar ao topo da tela (fim da rolagem suave), com limite de tempo. */
+function waitUntilVisible(el: HTMLElement | null, maxMs: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (!el) return resolve();
+    const t0 = performance.now();
+    let lastTop = Infinity;
+    let still = 0;
+    const tick = () => {
+      const top = el.getBoundingClientRect().top;
+      still = Math.abs(top - lastTop) < 0.5 ? still + 1 : 0;
+      lastTop = top;
+      const arrived = top > -40 && top < 80 && still >= 3;
+      if (arrived || performance.now() - t0 > maxMs) resolve();
+      else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
 export function GiftsExperience() {
-  const { gifts, myGifts, guestName, setGuestName, reserve, undo } = useGifts();
+  const { gifts, myGifts, guestName, setGuestName, reserve, undo, requestReaction } = useGifts();
   const toast = useToast();
   const [selected, setSelected] = useState<GiftView | null>(null);
   const [lastChosen, setLastChosen] = useState<GiftView | null>(null);
@@ -36,9 +55,13 @@ export function GiftsExperience() {
     if (result.status === "ok") {
       setLastChosen(gift);
       setAnnounce(giftsCopy.ok(gift.title));
-      // Espera o modal fechar (ele trava a rolagem do body) antes de levar à casinha.
+      // Espera o modal fechar (ele trava a rolagem do body), leva à casinha e só então
+      // dispara a reação dos noivos, para ela acontecer na frente do convidado.
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      window.setTimeout(() => houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), 80);
+      await new Promise((r) => window.setTimeout(r, 80));
+      houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      await waitUntilVisible(houseRef.current, 1600);
+      requestReaction(gift.id);
     } else {
       setAnnounce(giftsCopy.taken);
       toast(giftsCopy.taken);
