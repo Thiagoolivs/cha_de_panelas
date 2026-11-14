@@ -27,22 +27,30 @@ export function RingSection() {
   const [gl, setGl] = useState(true);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  // Só carrega o three.js quando a seção se aproxima.
+  // three.js pesa: só carrega quando a pessoa começa a rolar ou a seção chega perto.
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setGl(hasWebGL());
-          setMount(true);
-          io.disconnect();
-        }
-      },
-      { rootMargin: "800px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    let done = false;
+    const start = () => {
+      if (done) return;
+      done = true;
+      setGl(hasWebGL());
+      setMount(true);
+    };
+    const onScroll = () => window.scrollY > 40 && start();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const near = new IntersectionObserver(([e]) => e.isIntersecting && start());
+    near.observe(el);
+    // Só anima (desenha quadros) enquanto a seção está na tela.
+    const onScreen = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
+    onScreen.observe(el);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      near.disconnect();
+      onScreen.disconnect();
+    };
   }, []);
 
   // Interpolações com limite explícito (0..1).
@@ -59,7 +67,7 @@ export function RingSection() {
   if (reduce) {
     return (
       <section aria-label="Aliança" className="relative h-[70svh] min-h-[420px]">
-        {mount && gl && <RingScene progress={null} still />}
+        {mount && gl && <RingScene progress={null} still active={visible} />}
       </section>
     );
   }
@@ -70,7 +78,7 @@ export function RingSection() {
         <motion.div className="absolute inset-0 bg-green-ui" style={{ opacity: greenOpacity }} aria-hidden="true" />
         <div className={`absolute inset-0 transition-opacity duration-300 ${past ? "opacity-0" : "opacity-100"}`}>
           {mount && gl ? (
-            <RingScene progress={scrollYProgress} />
+            <RingScene progress={scrollYProgress} active={visible && !past} />
           ) : (
             <div className="flex h-full items-center justify-center text-olive-700">
               <svg viewBox="0 0 120 120" className="w-40" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">

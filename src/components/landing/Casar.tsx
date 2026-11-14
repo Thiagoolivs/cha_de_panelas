@@ -24,7 +24,7 @@ export function Casar() {
         {/* Com movimento, o título aparece no fim da aliança 3D; aqui fica para leitores de tela. */}
         <h2 className={reduce ? "title-caps pt-10 pb-6 text-[3.6rem] text-white" : "sr-only"}>{copy.casar.title}</h2>
         <motion.p
-          className="text-[1.05rem] leading-relaxed font-light"
+          className="text-[1.05rem] leading-relaxed"
           initial={reduce ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}

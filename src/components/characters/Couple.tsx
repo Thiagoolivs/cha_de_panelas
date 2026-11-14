@@ -79,7 +79,7 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
  * do rosto (fração) e proporção. Medido nos recortes do convite (scripts/extract_assets.py).
  */
 const PHOTO = {
-  kawany: { cx: 0.51, cy: 0.32, face: 0.38, aspect: 516 / 560 },
+  kawany: { cx: 0.66, cy: 0.42, face: 0.31, aspect: 517 / 560 },
   nathan: { cx: 0.5, cy: 0.34, face: 0.88, aspect: 467 / 320 },
 } as const;
 const FACE_W = 26; // largura do rosto em unidades do personagem (cabeça ~1/3 do corpo)

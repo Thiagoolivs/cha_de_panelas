@@ -15,7 +15,7 @@ export function BorderLine({ className = "", delay = 0, inView = false }: { clas
       };
   return (
     <motion.img
-      src="/assets/convite/utensilios-borda.svg"
+      src="/assets/convite/utensilios-borda.webp"
       alt=""
       aria-hidden="true"
       className={`mx-auto block w-full max-w-[560px] ${className}`}

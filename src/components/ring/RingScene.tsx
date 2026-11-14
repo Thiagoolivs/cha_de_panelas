@@ -62,7 +62,6 @@ function Ring({ progress, still }: { progress: MotionValue<number> | null; still
     g.rotation.x = THREE.MathUtils.lerp(-0.45, 0, fly) + Math.sin(t0.current * 0.7) * 0.06 * (1 - fly);
     g.rotation.y = THREE.MathUtils.lerp(spin, Math.round(spin / Math.PI) * Math.PI, fly);
     g.rotation.z = THREE.MathUtils.lerp(0.18, 0, fly);
-    state.invalidate();
   });
 
   return (
@@ -95,10 +94,12 @@ function Ring({ progress, still }: { progress: MotionValue<number> | null; still
   );
 }
 
-export default function RingScene({ progress, still = false }: { progress: MotionValue<number> | null; still?: boolean }) {
+export default function RingScene({ progress, still = false, active = true }: { progress: MotionValue<number> | null; still?: boolean; active?: boolean }) {
   return (
     <Canvas
-      dpr={[1, 1.75]}
+      // Fora da tela não desenha nada (economiza CPU e bateria no celular).
+      frameloop={active ? "always" : "never"}
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0, 10], fov: 32, near: 0.05, far: 50 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%" }}

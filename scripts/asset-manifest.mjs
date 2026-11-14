@@ -17,8 +17,8 @@ const manifest = {
   faces: { kawany: expr("kawany"), nathan: expr("nathan") },
   hands: has("assets/convite/maos.webp"),
   utensils: {
-    top: has("assets/convite/utensilios-pote.svg"),
-    bottom: has("assets/convite/utensilios-borda.svg"),
+    top: has("assets/convite/utensilios-pote.webp"),
+    bottom: has("assets/convite/utensilios-borda.webp"),
   },
 };
 

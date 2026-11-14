@@ -6,12 +6,23 @@ import { useEffect, useRef, useState } from "react";
 /** Vídeo dentro do celular: toca sozinho (mudo, em loop) quando aparece; toque pausa/retoma. */
 export function PhoneVideo({ src, poster, label }: { src: string; poster?: string; label: string }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const box = useRef<HTMLButtonElement>(null);
   const reduce = !!useReducedMotion();
   const [paused, setPaused] = useState(true);
+  // O vídeo (e até a capa) só carrega quando o celular chega perto da tela.
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: "400px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     const v = ref.current;
-    if (!v || reduce) return;
+    if (!v || reduce || !near) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) void v.play().catch(() => {});
@@ -21,10 +32,11 @@ export function PhoneVideo({ src, poster, label }: { src: string; poster?: strin
     );
     io.observe(v);
     return () => io.disconnect();
-  }, [reduce]);
+  }, [reduce, near]);
 
   return (
     <button
+      ref={box}
       type="button"
       className="relative block h-full w-full"
       aria-label={paused ? `Tocar ${label}` : `Pausar ${label}`}
@@ -37,12 +49,12 @@ export function PhoneVideo({ src, poster, label }: { src: string; poster?: strin
     >
       <video
         ref={ref}
-        src={src}
-        poster={poster}
+        src={near ? src : undefined}
+        poster={near ? poster : undefined}
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         onPlay={() => setPaused(false)}
         onPause={() => setPaused(true)}
         className="h-full w-full object-cover"

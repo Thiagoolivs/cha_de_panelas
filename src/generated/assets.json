@@ -13,7 +13,7 @@
   },
   "hands": "/assets/convite/maos.webp",
   "utensils": {
-    "top": "/assets/convite/utensilios-pote.svg",
-    "bottom": "/assets/convite/utensilios-borda.svg"
+    "top": "/assets/convite/utensilios-pote.webp",
+    "bottom": "/assets/convite/utensilios-borda.webp"
   }
 }

@@ -10,4 +10,4 @@ export const script = Waterfall({ subsets: ["latin"], weight: "400", variable: "
 export const hand = Gochi_Hand({ subsets: ["latin"], weight: "400", variable: "--font-hand", display: "swap" });
 
 /** Texto corrido: a mesma do convite. */
-export const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "700"], variable: "--font-montserrat", display: "swap" });
+export const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-montserrat", display: "swap" });
