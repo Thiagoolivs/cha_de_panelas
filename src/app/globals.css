@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+/* Identidade do convite (CONVITE CHÁ DE PANELA.pdf). Ver DECISIONS.md. */
+:root {
+  --olive-700: #70773d; /* títulos, line-art (cor exata do convite) */
+  --green: #828753; /* páginas verdes do convite (decorativo / texto grande) */
+  --green-ui: #747a46; /* seções verdes com texto pequeno (branco 4,5:1) */
+  --olive-900: #5a6030; /* texto secundário sobre creme */
+  --olive-500: #828753;
+  --cream: #fdfcf9; /* papel */
+  --card: #ffffff;
+  --board: #966639; /* tábua da data */
+  --tan: #c3a984;
+  --gray: #737373;
+  --ink: #1f1c18;
+  --gold-light: #fdfcf9;
+  --paper: url("/assets/convite/papel.jpg");
+}
+
+@theme inline {
+  --color-olive-700: var(--olive-700);
+  --color-olive-500: var(--olive-500);
+  --color-olive-900: var(--olive-900);
+  --color-green: var(--green);
+  --color-green-ui: var(--green-ui);
+  --color-cream: var(--cream);
+  --color-card: var(--card);
+  --color-board: var(--board);
+  --color-tan: var(--tan);
+  --color-gold: var(--tan);
+  --color-gold-light: var(--gold-light);
+  --color-gray: var(--gray);
+  --color-ink: var(--ink);
+  --font-display: var(--font-display), "Gilda Display", Georgia, serif;
+  --font-serif: var(--font-display), "Gilda Display", Georgia, serif;
+  --font-script: var(--font-script), "Waterfall", cursive;
+  --font-hand: var(--font-hand), "Gochi Hand", cursive;
+  --font-sans: var(--font-montserrat), Montserrat, system-ui, sans-serif;
+}
+
+html {
+  background: var(--cream);
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--cream);
+  background-image: var(--paper);
+  background-size: 576px auto;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--olive-700);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Títulos do convite: serifada de alto contraste, caixa alta, sem tracking largo. */
+.title-caps {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  color: var(--olive-700);
+  line-height: 0.95;
+}
+
+/* Assinatura: script fina e espaçada, como a Abramo Script do convite. */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+/* Notas manuscritas do convite. */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--olive-900);
+}
+
+/* Etiqueta branca inclinada (preços do Pix, "NOSSO PIX"). */
+.sticker {
+  display: inline-block;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-hand);
+  padding: 0.15rem 0.6rem;
+  box-shadow: 0 2px 6px rgba(31, 28, 24, 0.18);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.15s, background-color 0.2s, color 0.2s, opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--olive-700);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--olive-900);
+}
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+}
+.btn-ink {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-outline {
+  border: 1.5px solid var(--olive-700);
+  color: var(--olive-700);
+  background: transparent;
+}
+.btn-ghost {
+  color: var(--olive-900);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  font-size: 0.92rem;
+  min-height: 44px;
+  padding: 0.5rem 0.25rem;
+  border-radius: 0;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid rgba(112, 119, 61, 0.45);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 16px;
+  color: var(--ink);
+}
+.field:focus {
+  outline: 2px solid var(--olive-700);
+  outline-offset: 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(31, 28, 24, 0.05), 0 6px 20px -10px rgba(31, 28, 24, 0.18);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lineart,
+.lineart * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Foco visível dentro da casinha (SVG) */
+.house-room:focus-visible .house-focus-ring {
+  stroke: #fff;
+  stroke-width: 3;
+}
+.house-item:focus-visible {
+  outline: none;
+}
+.house-item:focus-visible > g {
+  filter: drop-shadow(0 0 3px #fff);
+}
+
+/* Casinha numa "página verde" do convite: traço creme, presentes em branco. */
+.house-theme {
+  --h-line: rgba(253, 252, 249, 0.92);
+  --h-line-soft: rgba(253, 252, 249, 0.6);
+  --h-fill: #7c824d;
+  --h-wall: #7a804b;
+  --h-back: #868c58;
+  --h-ceil: #777d48;
+  --h-floor: #8d935f;
+  --h-wood: rgba(253, 252, 249, 0.16);
+  --h-glass: rgba(253, 252, 249, 0.22);
+  --h-gift: #ffffff;
+  --icon-fill: #8f955f;
+  --icon-accent: #fdfcf9;
+  --icon-glass: rgba(255, 255, 255, 0.18);
+  background-color: var(--green);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 42%, rgba(255, 255, 255, 0.08), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* fumacinha da chaminé */
+@keyframes house-smoke {
+  0% { transform: translateY(6px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-14px); opacity: 0; }
+}
+.house-smoke circle { animation: house-smoke 4.5s ease-out infinite; transform-box: fill-box; }
+.house-smoke circle:nth-child(2) { animation-delay: 1.5s; }
+.house-smoke circle:nth-child(3) { animation-delay: 3s; }
+
+/* Flutuar suave dos rostos na capa (CSS, roda na GPU sem travar a página) */
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.hero-float { animation: hero-float 4s ease-in-out 1.2s infinite; will-change: transform; }
+.hero-float-b { animation-duration: 4.6s; animation-delay: 2.2s; }
+
+/* Setinha "role para baixo" da abertura */
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+.scroll-hint-arrow { animation: scroll-hint 1.4s ease-in-out infinite; }

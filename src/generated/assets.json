@@ -1,0 +1,19 @@
+{
+  "faces": {
+    "kawany": {
+      "sorriso": "/assets/fotos/kawany-sorriso.webp",
+      "surpresa": null,
+      "gargalhada": null
+    },
+    "nathan": {
+      "sorriso": "/assets/fotos/nathan-sorriso.webp",
+      "surpresa": null,
+      "gargalhada": null
+    }
+  },
+  "hands": "/assets/convite/maos.webp",
+  "utensils": {
+    "top": "/assets/convite/utensilios-pote.webp",
+    "bottom": "/assets/convite/utensilios-borda.webp"
+  }
+}
