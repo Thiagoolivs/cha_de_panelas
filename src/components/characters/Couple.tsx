@@ -79,8 +79,8 @@ function DrawnFace({ who, expr }: { who: Who; expr: Expr }) {
  * do rosto (fração) e proporção. Medido nos recortes do convite (scripts/extract_assets.py).
  */
 const PHOTO = {
-  kawany: { cx: 0.71, cy: 0.32, face: 0.36, aspect: 594 / 520 },
-  nathan: { cx: 0.5, cy: 0.5, face: 0.85, aspect: 434 / 300 },
+  kawany: { cx: 0.51, cy: 0.4, face: 0.42, aspect: 516 / 560 },
+  nathan: { cx: 0.5, cy: 0.58, face: 0.88, aspect: 467 / 320 },
 } as const;
 const FACE_W = 26; // largura do rosto em unidades do personagem (cabeça ~1/3 do corpo)
 
@@ -100,16 +100,23 @@ const HAS_PHOTO = { kawany: !!facePhoto("kawany", "sorriso"), nathan: !!facePhot
 
 /* ---------- braços ---------- */
 
-function Arm({ sleeve, bindForearm, side }: { sleeve: string; bindForearm: (el: SVGGElement | null) => void; side: "l" | "r" }) {
+function Arm({ sleeve, bindForearm, side, slim = false }: { sleeve: string; bindForearm: (el: SVGGElement | null) => void; side: "l" | "r"; slim?: boolean }) {
+  const w = slim ? 2.7 : 3.4; // meia largura no ombro
   return (
     <g data-joint={`${side}-shoulder`}>
-      <path d="M-3.4 0C-3.6 8-3.4 16-3 24H3C3.4 16 3.6 8 3.4 0Q0-3-3.4 0z" fill={sleeve} />
+      <path d={`M${-w} 0C${-w - 0.3} 8 ${-w + 0.2} 16 ${-w + 0.6} 24H${w - 0.6}C${w - 0.2} 16 ${w + 0.3} 8 ${w} 0Q0 ${-w} ${-w} 0z`} fill={sleeve} />
       <g ref={bindForearm} data-joint={`${side}-elbow`}>
-        <path d="M-2.8 0L-2.4 19H2.4L2.8 0z" fill={SKIN} />
-        <ellipse cx={0} cy={22} rx={3.2} ry={3.8} fill={SKIN} />
+        <path d={`M${-w + 0.6} 0C${-w + 0.4} 7 ${-w + 0.9} 14 ${-w + 1.2} 19H${w - 1.2}C${w - 0.9} 14 ${w - 0.4} 7 ${w - 0.6} 0z`} fill={SKIN} />
+        {/* mão: palma e polegar */}
+        <path d={`M${-w + 0.8} 18.5c-0.6 2.6-0.2 6 2.4 6.6 2.4 0.5 4-1.6 3.8-4.6l-0.2-2z`} fill={SKIN} />
       </g>
     </g>
   );
+}
+
+/** Sombra suave no chão, para os dois "pisarem" no cômodo. */
+function GroundShadow({ rx }: { rx: number }) {
+  return <ellipse cx={0} cy={-0.5} rx={rx} ry={3.2} fill="#1f1c18" fillOpacity={0.22} stroke="none" />;
 }
 
 /* ---------- corpos ---------- */
@@ -135,24 +142,29 @@ interface FigureProps {
 function Kawany({ expr, set }: FigureProps) {
   return (
     <g ref={set("root")} style={{ opacity: 0 }}>
+      <GroundShadow rx={30} />
       <g ref={set("torso")}>
         {/* véu atrás de tudo: o desenhado do convite, ou um traço simples de reserva */}
         {HAS_PHOTO.kawany ? (
-          <image href="/assets/convite/veu.webp" x={-28} y={-158} width={64} height={83} preserveAspectRatio="none" />
+          <image href="/assets/convite/veu.webp" x={-31} y={-162} width={68} height={88} preserveAspectRatio="none" />
         ) : (
           <>
             <path d="M-13 -142C-30 -118-34-86-31-56Q0-48 31-56C34-86 30-118 13-142Q0-148-13-142z" fill={CREAM} fillOpacity={0.9} strokeOpacity={0.55} />
             <path d="M-18 -110C-22 -92-23 -76-22 -60M18 -110C22 -92 23 -76 22 -60" opacity={0.3} />
           </>
         )}
-        {/* saia evasê */}
-        <path d="M-9 -86C-13 -58-26 -28-31 -2Q0 4 31 -2C26 -28 13 -58 9 -86z" fill={CREAM} />
-        <path d="M-4 -80C-8 -56-12 -30-13 -2M4 -80C8 -56 12 -30 13 -2" opacity={0.35} />
-        {/* corpete */}
-        <path d="M-11 -99C-12 -95-11 -90-9 -86H9C11 -90 12 -95 11 -99C7 -97 3 -96 0 -98C-3 -96-7 -97-11 -99z" fill={CREAM} />
-        <path d="M-9 -86H9" strokeWidth={1.6} />
-        <path d="M-3 -104v5M3 -104v5" />
-        <path d="M-3 -100h6" stroke={SKIN} strokeWidth={3} />
+        {/* saia rodada, com barra ondulada e dobras */}
+        <path d="M-8 -85C-14 -62-29 -28-34 -3Q-28 0-22 -2Q-17 1-11 -1Q-5 2 0 -1Q5 2 11 -1Q17 1 22 -2Q28 0 34 -3C29 -28 14 -62 8 -85z" fill={CREAM} />
+        <path d="M-4 -80C-9 -58-15 -32-17 -2M3 -80C6 -56 9 -30 9 -1M-1 -82C-2 -60-4 -30-5 -1" opacity={0.28} />
+        {/* ombros, colo e pescoço */}
+        <path d="M-10.5 -100Q-10 -103.5-5 -103.5L-3.2 -107H3.2L5 -103.5Q10 -103.5 10.5 -100C7 -99 4.5 -98 2.2 -96.6Q0 -98.6-2.2 -96.6C-4.5 -98-7 -99-10.5 -100z" fill={SKIN} />
+        {/* corpete com decote coração */}
+        <path d="M-10.5 -100C-11.5 -94-10.5 -89-8 -84.5H8C10.5 -89 11.5 -94 10.5 -100C7 -99 4.5 -98 2.2 -96.6Q0 -98.6-2.2 -96.6C-4.5 -98-7 -99-10.5 -100z" fill={CREAM} />
+        <path d="M-6 -95.5C-5.5 -92-5 -89-4 -86M6 -95.5C5.5 -92 5 -89 4 -86" opacity={0.25} />
+        {/* faixa na cintura com laço */}
+        <path d="M-8.4 -86.5H8.4V-83.6H-8.4z" fill="#f1ede4" />
+        <path d="M-5 -85l-4.5-2.6v5.2zM-5 -85l4.5-2.6v5.2z" fill="#f1ede4" />
+        <circle cx={-5} cy={-85} r={1} fill="#f1ede4" />
         <g ref={set("head")}>
           <Face who="kawany" expr={expr} />
           {/* três florzinhas no véu (só no rosto desenhado; o véu do convite já tem) */}
@@ -166,10 +178,10 @@ function Kawany({ expr, set }: FigureProps) {
           ))}
         </g>
         <g ref={set("lArm")}>
-          <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
+          <Arm side="l" sleeve={SKIN} slim bindForearm={set("lFore")} />
         </g>
         <g ref={set("rArm")}>
-          <Arm side="r" sleeve={CREAM} bindForearm={set("rFore")} />
+          <Arm side="r" sleeve={SKIN} slim bindForearm={set("rFore")} />
         </g>
       </g>
     </g>
@@ -179,23 +191,29 @@ function Kawany({ expr, set }: FigureProps) {
 function Nathan({ expr, set }: FigureProps) {
   return (
     <g ref={set("root")} style={{ opacity: 0 }}>
-      {/* calça e sapatos (fora do giro do tronco) */}
-      <path d="M-11 -64L-10 -3H-2L0 -48 2 -3H10L11 -64z" fill="#2b2b24" />
-      <path d="M-11 -2c0-3 3-4 6-4h3v5h-9zM11 -2c0-3-3-4-6-4H2v5h9z" fill="#1e2015" />
+      <GroundShadow rx={16} />
+      {/* calça com vinco e sapatos (fora do giro do tronco) */}
+      <path d="M-11.5 -64L-10.5 -3.5H-1.8L0 -46 1.8 -3.5H10.5L11.5 -64z" fill="#2b2b24" />
+      <path d="M-6 -60V-5M6 -60V-5" stroke="#4a4a40" />
+      <path d="M-12.5 -0.8c0-3 2.6-4.6 6-4.6h4.8v5.4h-10.8zM12.5 -0.8c0-3-2.6-4.6-6-4.6H1.7v5.4h10.8z" fill="#141410" />
       <g ref={set("torso")}>
-        {/* camisa */}
-        <path d="M-12 -99L-11.5 -62H11.5L12 -99Q6 -102 3 -103H-3Q-6 -102-12 -99z" fill={CREAM} />
-        <path d="M-3 -107v4M3 -107v4" />
-        {/* colete */}
-        <path d="M-11.5 -97L-11 -65L0 -61L11 -65L11.5 -97L5 -100L0 -84L-5 -100z" fill={TAN} />
-        <circle cx={0} cy={-78} r={0.9} fill="#fff" />
-        <circle cx={0} cy={-72} r={0.9} fill="#fff" />
-        <circle cx={0} cy={-66} r={0.9} fill="#fff" />
+        {/* pescoço */}
+        <path d="M-3.6 -108V-101H3.6V-108z" fill={SKIN} />
+        {/* camisa com colarinho */}
+        <path d="M-12.5 -99L-11.8 -62H11.8L12.5 -99Q7 -102 3.4 -103H-3.4Q-7 -102-12.5 -99z" fill={CREAM} />
+        <path d="M-3.4 -103L0 -98.5 3.4 -103L5.5 -99.5 1.4 -96.5M-3.4 -103L-5.5 -99.5-1.4 -96.5" fill={CREAM} />
+        {/* colete com lapela, bolso e botões */}
+        <path d="M-11.8 -97L-11.2 -64L0 -59.5L11.2 -64L11.8 -97L5.6 -100.5L0 -83L-5.6 -100.5z" fill={TAN} />
+        <path d="M-5.6 -100.5L-2.6 -91M5.6 -100.5L2.6 -91" opacity={0.45} />
+        <path d="M5 -76h4.5" opacity={0.6} />
+        {[-79, -73.5, -68].map((y) => (
+          <circle key={y} cx={0} cy={y} r={0.9} fill="#fff" />
+        ))}
         <g ref={set("head")}>
           <Face who="nathan" expr={expr} />
         </g>
         {/* gravata-borboleta do convite */}
-        <image href="/assets/convite/gravata.svg" x={-10} y={-108} width={20} height={15.5} preserveAspectRatio="none" />
+        <image href="/assets/convite/gravata.svg" x={-9.5} y={-106.5} width={19} height={14.8} preserveAspectRatio="none" />
         <g ref={set("lArm")}>
           <Arm side="l" sleeve={CREAM} bindForearm={set("lFore")} />
         </g>

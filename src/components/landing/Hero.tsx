@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/config/site";
+import assets from "@/generated/assets.json";
 import { copy } from "@/content/copy";
 import { BorderLine } from "@/components/ornaments/BorderLine";
 
@@ -57,16 +58,16 @@ export function Hero() {
 
         {/* o casal, nas proporções da página 1 do convite: rosto em foto, véu e gravata */}
         <div className="relative mx-auto mt-[2%] aspect-[500/235] w-full">
-          <motion.div className="absolute top-[2%] left-[10%] w-[44%]" {...pop(1.0)}>
+          <motion.div className="absolute top-[4%] left-[8%] w-[48%]" {...pop(1.0)}>
             <motion.div {...float(0)} className="relative">
-              <img src="/assets/convite/veu.webp" alt="" aria-hidden="true" className="absolute -top-[5%] left-[22%] w-[78%] max-w-none" />
-              <img src="/assets/convite/rosto-kawany.webp" alt="Kawany" className="relative w-full" />
+              <img src="/assets/convite/veu.webp" alt="" aria-hidden="true" className="absolute -top-[7%] left-[14%] w-[76%] max-w-none" />
+              <img src={assets.faces.kawany.sorriso ?? "/assets/convite/rosto-kawany.webp"} alt="Kawany" className="relative w-full" />
             </motion.div>
           </motion.div>
-          <motion.div className="absolute top-[4%] left-[57%] w-[22%]" {...pop(1.2)}>
+          <motion.div className="absolute top-[2%] left-[58%] w-[21%]" {...pop(1.2)}>
             <motion.div {...float(0.6)} className="relative">
-              <img src="/assets/convite/rosto-nathan.webp" alt="Nathan" className="relative w-full" />
-              <img src="/assets/convite/gravata.svg" alt="" aria-hidden="true" className="absolute top-[78%] left-[2%] w-[84%] max-w-none" />
+              <img src={assets.faces.nathan.sorriso ?? "/assets/convite/rosto-nathan.webp"} alt="Nathan" className="relative w-full" />
+              <img src="/assets/convite/gravata.svg" alt="" aria-hidden="true" className="absolute top-[93%] left-[10%] w-[80%] max-w-none" />
             </motion.div>
           </motion.div>
         </div>

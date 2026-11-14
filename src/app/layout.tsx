@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { site } from "@/config/site";
 import { Providers } from "@/components/Providers";
 import { DemoPanelLoader } from "@/components/demo/DemoPanelLoader";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { display, hand, montserrat, script } from "./fonts";
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <Providers>
           {children}
+          <WhatsAppFab />
           {site.demo && <DemoPanelLoader />}
         </Providers>
       </body>

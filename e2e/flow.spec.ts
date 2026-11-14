@@ -11,7 +11,7 @@ test("landing mostra o convite e oferece a agenda", async ({ page, request }) =>
   await expect(page.getByRole("heading", { level: 1, name: /Chá dos Noivos/i })).toBeVisible();
   await expect(page.getByText("Kaw e Than").first()).toBeVisible();
   await expect(page.getByText("endereço em breve")).toBeVisible();
-  await expect(page.getByText(/Os noivos não verão quem escolheu cada presente/).first()).toBeAttached();
+  await expect(page.getByText(/os noivos não verão quem escolheu cada presente/i).first()).toBeAttached();
   const ics = await request.get("/agenda.ics");
   expect(ics.headers()["content-type"]).toContain("text/calendar");
   expect(await ics.text()).toContain("DTSTART:20261212T170000Z");
@@ -30,7 +30,7 @@ test("escolher um presente em até 4 toques com o nome salvo, ver na lista e des
   await expect(page.getByRole("dialog")).toContainText("Os noivos não vão saber que foi você.");
   // 3: confirmar
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
-  await expect(page.getByText("Air fryer é seu. Já está na casa.").first()).toBeVisible();
+  await expect(page.getByText("Presente escolhido: Air fryer. Já está na casa.").first()).toBeVisible();
   await expect(card).toContainText("Você escolheu");
   await expect(page.getByRole("region", { name: "Meus presentes" })).toContainText("Air fryer");
   await expect(page.getByText(/Fale com a Ra/)).toBeVisible();

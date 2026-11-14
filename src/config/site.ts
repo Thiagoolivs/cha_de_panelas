@@ -28,8 +28,8 @@ export const site = {
     quotas: [
       { value: 50, label: "Só pra não dizer que não dei nada", img: "/assets/convite/pix-50.webp" },
       { value: 100, label: "Creme de cabelo para a noiva cacheada", img: "/assets/convite/pix-100.webp" },
-      { value: 150, label: "Primeira conta de Luz", img: "/assets/convite/pix-150.webp" },
-      { value: 250, label: "para você ganhar todas as brincadeiras", img: "/assets/convite/pix-250.webp" },
+      { value: 150, label: "Primeira conta de luz", img: "/assets/convite/pix-150.webp" },
+      { value: 250, label: "Para você ganhar todas as brincadeiras", img: "/assets/convite/pix-250.webp" },
     ],
   },
   /** Pessoa de confiança que tira dúvidas de estilo com a noiva sem revelar quem deu. */
@@ -37,7 +37,9 @@ export const site = {
     name: env(process.env.NEXT_PUBLIC_STYLE_CONTACT_NAME) ?? "Rayssa",
     phone: env(process.env.NEXT_PUBLIC_STYLE_CONTACT_PHONE),
   },
-  videoUrl: env(process.env.NEXT_PUBLIC_VIDEO_URL),
+  /** Vídeo do passo a passo (gravado do próprio site; ver scripts/gravar-video). */
+  videoUrl: env(process.env.NEXT_PUBLIC_VIDEO_URL) ?? "/videos/como-funciona.mp4",
+  videoPoster: "/videos/como-funciona.jpg",
 } as const;
 
 export type SiteConfig = typeof site;

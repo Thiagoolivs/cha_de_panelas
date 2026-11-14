@@ -1,12 +1,12 @@
 {
   "faces": {
     "kawany": {
-      "sorriso": "/assets/convite/rosto-kawany.webp",
+      "sorriso": "/assets/fotos/kawany-sorriso.webp",
       "surpresa": null,
       "gargalhada": null
     },
     "nathan": {
-      "sorriso": "/assets/convite/rosto-nathan.webp",
+      "sorriso": "/assets/fotos/nathan-sorriso.webp",
       "surpresa": null,
       "gargalhada": null
     }

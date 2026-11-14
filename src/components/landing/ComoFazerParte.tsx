@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { site } from "@/config/site";
 import { copy } from "@/content/copy";
+import { PhoneVideo } from "./PhoneVideo";
 
 /** Página 4 do convite: o celular com o vídeo explicativo, que se inclina em 3D na rolagem. */
 export function ComoFazerParte() {
@@ -33,7 +34,7 @@ export function ComoFazerParte() {
           <div className="absolute top-2 left-1/2 z-10 h-5 w-[36%] -translate-x-1/2 rounded-full bg-ink" />
           <div className="absolute inset-0 overflow-hidden rounded-[1.9rem] bg-green">
             {site.videoUrl ? (
-              <video src={site.videoUrl} controls playsInline preload="none" className="h-full w-full object-cover" />
+              <PhoneVideo src={site.videoUrl} poster={site.videoPoster} label="vídeo explicativo" />
             ) : (
               <div className="flex h-full items-center justify-center">
                 <span className="-rotate-90 text-[0.8rem] whitespace-nowrap text-white">{copy.comoFazerParte.videoSoon}</span>

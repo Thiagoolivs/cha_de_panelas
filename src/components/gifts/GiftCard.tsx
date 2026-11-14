@@ -6,6 +6,7 @@ import { doubtLink } from "@/lib/contact";
 import { site } from "@/config/site";
 import { GiftIcon } from "@/components/icons/GiftIcon";
 import { giftsCopy } from "@/content/gifts-copy";
+import { PaletteNote } from "./PaletteNote";
 
 interface Props {
   gift: GiftView;
@@ -40,6 +41,7 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
             {gift.title}
           </h3>
           <p className="mt-1 text-[0.9rem] leading-snug text-ink/85">{gift.description}</p>
+          {gift.category === "utensilios" && !soldOut && <PaletteNote compact />}
           {gift.quantity > 1 && !soldOut && (
             <p className="mt-1 text-[0.8rem] font-medium tracking-wide text-olive-900">
               {giftsCopy.remaining(gift.remaining, gift.quantity)}

@@ -35,7 +35,7 @@ type Row = [
 const ate50: Row[] = [
   ["kit-corte", "Kit Corte", "Descascador, ralador e cortador de pizza.", "cozinha", "trilho-1", "kit-corte", "utensilios", 1, "kit descascador ralador cortador de pizza"],
   ["kit-espatulas", "Kit Espátulas", "Espátula de silicone, espátula para bolo e fouet.", "cozinha", "trilho-2", "kit-espatulas", "utensilios", 1, "kit espátula silicone espátula bolo fouet"],
-  ["kit-concha", "Kit Concha e Cia", "Concha, escumadeira e pegador de macarrão.", "cozinha", "trilho-3", "kit-concha", "utensilios", 1, "kit concha escumadeira pegador de macarrão"],
+  ["kit-concha", "Kit Concha e Cia.", "Concha, escumadeira e pegador de macarrão.", "cozinha", "trilho-3", "kit-concha", "utensilios", 1, "kit concha escumadeira pegador de macarrão"],
   ["kit-arroz-sorvete", "Kit Arroz e Sorvete", "Colher de arroz, pegador de sorvete e descanso de panela.", "cozinha", "trilho-4", "kit-arroz-sorvete", "utensilios", 1, "colher de arroz pegador de sorvete descanso de panela"],
   ["kit-espremedores", "Kit Espremedores", "Espremedor de alho, espremedor de limão e abridor de latas e garrafas.", "cozinha", "trilho-5", "kit-espremedores", "utensilios", 1, "espremedor de alho espremedor de limão abridor de latas"],
   ["kit-temperos", "Kit Temperos", "Saleiro, açucareiro e porta-azeite (galheteiro).", "copa", "mesa-e", "kit-temperos", "louca", 1, "kit saleiro açucareiro galheteiro"],
@@ -61,12 +61,12 @@ const de50a150: Row[] = [
   ["travessa-media", "Travessa média", "Para o arroz de forno de quarta.", "despensa", "prateleira-6", "travessa-media", "panelas", 1, "travessa média refratária"],
   ["frigideira", "Frigideira", "Antiaderente, de preferência.", "cozinha", "fogao-1", "frigideira", "panelas", 1, "frigideira antiaderente"],
   ["assadeira", "Assadeira retangular", "Para bolo, assado e tudo o que couber.", "despensa", "prateleira-7", "assadeira", "panelas", 2, "assadeira retangular"],
-  ["jarra-de-vidro", "Jarra de vidro", "Para o suco, ou para a água com limão.", "copa", "mesa-c", "jarra-de-vidro", "louca", 1, "jarra de vidro"],
-  ["bandeja", "Bandeja de servir", "Para servir com estilo, ou o café na cama.", "copa", "parede-aparador", "bandeja", "louca", 1, "bandeja de servir"],
+  ["jarra-de-vidro", "Jarra de vidro", "Para o suco ou a água com limão.", "copa", "mesa-c", "jarra-de-vidro", "louca", 1, "jarra de vidro"],
+  ["bandeja", "Bandeja de servir", "Para servir com estilo ou levar o café na cama.", "copa", "parede-aparador", "bandeja", "louca", 1, "bandeja de servir"],
   ["lixeira", "Lixeira", "Uma para a cozinha e outra para o resto da casa.", "cozinha", "chao-canto", "lixeira", "limpeza", 2, "lixeira com pedal"],
   ["tapete-cozinha", "Tapete de cozinha", "Para ficar em frente à pia.", "cozinha", "chao-frente", "tapete-cozinha", "limpeza", 1, "tapete de cozinha"],
   ["garrafa-termica", "Garrafa térmica", "Café quente até a visita chegar.", "copa", "aparador-2", "garrafa-termica", "louca", 1, "garrafa térmica café"],
-  ["bule", "Bule de chá", "Para o chá das cinco, ou das nove.", "copa", "aparador-3", "bule", "louca", 1, "bule de chá"],
+  ["bule", "Bule de chá", "Para o chá das cinco ou das nove.", "copa", "aparador-3", "bule", "louca", 1, "bule de chá"],
   ["leiteira", "Leiteira", "Para o leite não derramar. Pelo menos não sempre.", "cozinha", "fogao-2", "leiteira", "panelas", 1, "leiteira"],
   ["tabua-de-frios", "Tábua de frios", "Queijo, vinho e uma boa conversa.", "copa", "mesa-a", "tabua-de-frios", "louca", 1, "tábua de frios"],
   ["porta-mantimentos", "Porta-mantimentos", "Arroz, feijão, açúcar e café, todos à vista.", "despensa", "prateleira-2", "porta-mantimentos", "organizacao", 1, "porta mantimentos"],
@@ -87,7 +87,7 @@ const eletro: Row[] = [
 
 const acima150: Row[] = [
   ["potes-hermeticos", "Jogo de potes herméticos de vidro", "Vidro com tampa que veda de verdade.", "despensa", "prateleira-4", "potes-hermeticos", "organizacao", 1, "jogo de potes herméticos de vidro"],
-  ["jogo-de-pratos", "Jogo de pratos", "Pratos rasos e fundos, simples, para todo dia.", "copa", "cristaleira-6", "jogo-de-pratos", "louca", 1, "jogo de pratos raso e fundo"],
+  ["jogo-de-pratos", "Jogo de pratos", "Pratos rasos e fundos, simples, para o dia a dia.", "copa", "cristaleira-6", "jogo-de-pratos", "louca", 1, "jogo de pratos raso e fundo"],
   ["jogo-de-talheres", "Jogo de talheres", "Garfo, faca e colher para a casa toda.", "copa", "mesa-f", "jogo-de-talheres", "louca", 1, "jogo de talheres inox"],
   ["faqueiro-servir", "Faqueiro para servir", "Talheres de servir, para quando tiver visita.", "copa", "mesa-g", "faqueiro-servir", "louca", 1, "faqueiro talheres de servir"],
   ["liquidificador", "Liquidificador", "Vitamina, suco e molho de tomate caseiro.", "cozinha", "bancada-3", "liquidificador", "eletro", 1, "liquidificador"],

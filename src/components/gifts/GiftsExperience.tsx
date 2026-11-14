@@ -11,6 +11,7 @@ import { GiftList } from "./GiftList";
 import { ChooseDialog } from "./ChooseDialog";
 import { MyGifts } from "./MyGifts";
 import { AfterChoice } from "./AfterChoice";
+import { PaletteNote } from "./PaletteNote";
 
 // A casinha carrega depois, sem bloquear a lista.
 const HouseStage = dynamic(() => import("@/components/house/HouseStage").then((m) => m.HouseStage), {
@@ -35,8 +36,9 @@ export function GiftsExperience() {
     if (result.status === "ok") {
       setLastChosen(gift);
       setAnnounce(giftsCopy.ok(gift.title));
+      // Espera o modal fechar (ele trava a rolagem do body) antes de levar à casinha.
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      window.setTimeout(() => houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), 80);
     } else {
       setAnnounce(giftsCopy.taken);
       toast(giftsCopy.taken);
@@ -73,6 +75,7 @@ export function GiftsExperience() {
           <h1 className="title-caps text-[2.1rem]">{giftsCopy.title}</h1>
           <p className="mt-2 text-[0.98rem]">{giftsCopy.intro}</p>
           <p className="mt-1 text-[0.88rem] text-olive-900">Os noivos não verão quem escolheu cada presente.</p>
+          <PaletteNote />
         </header>
 
         {mine.length > 0 && (

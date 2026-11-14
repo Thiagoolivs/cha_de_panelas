@@ -32,7 +32,7 @@ export const giftsCopy = {
   confirmBtn: "Confirmar",
   cancel: "Voltar",
   taken: "Alguém acabou de escolher este. Que tal outro?",
-  ok: (item: string) => `${item} é seu. Já está na casa.`,
+  ok: (item: string) => `Presente escolhido: ${item}. Já está na casa.`,
   undo: "Desfazer",
   undone: (item: string) => `Pronto, ${item} voltou para a lista.`,
   myTitle: "Meus presentes",
