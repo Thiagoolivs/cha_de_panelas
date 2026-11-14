@@ -14,7 +14,12 @@ const root = path.join(__dirname, "..", "..");
 // Servido temporariamente como arquivo estático do site (para carregar fontes e imagens).
 const tmpPage = path.join(root, "public", "_video-roteiro.html");
 fs.copyFileSync(path.join(__dirname, "roteiro.html"), tmpPage);
-process.on("exit", () => fs.rmSync(tmpPage, { force: true }));
+const tmpImg = path.join(root, "public", "_video-img");
+fs.cpSync(path.join(__dirname, "img"), tmpImg, { recursive: true });
+process.on("exit", () => {
+  fs.rmSync(tmpPage, { force: true });
+  fs.rmSync(tmpImg, { recursive: true, force: true });
+});
 
 (async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "video-"));

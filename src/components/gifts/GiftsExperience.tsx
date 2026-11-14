@@ -87,12 +87,7 @@ export function GiftsExperience() {
         <div className="mt-6">
           <GiftList gifts={gifts} myIds={myIds} onChoose={setSelected} />
         </div>
-        <p className="mt-10 text-center text-[0.8rem] text-gray">
-          Fotos ilustrativas.{" "}
-          <Link href="/creditos" className="underline underline-offset-2">
-            Créditos das fotos
-          </Link>
-        </p>
+
       </div>
 
       <ChooseDialog
