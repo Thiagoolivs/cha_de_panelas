@@ -46,15 +46,30 @@ export function GiftsExperience() {
   const [announce, setAnnounce] = useState("");
   const houseRef = useRef<HTMLDivElement>(null);
 
-  const myIds = useMemo(() => new Set(myGifts.map((m) => m.giftId)), [myGifts]);
-  const mine = useMemo(() => (gifts ?? []).filter((g) => myIds.has(g.id)), [gifts, myIds]);
+  const mineCounts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const g of myGifts) m.set(g.giftId, (m.get(g.giftId) ?? 0) + 1);
+    return m;
+  }, [myGifts]);
+  const mine = useMemo(() => (gifts ?? []).filter((g) => mineCounts.has(g.id)), [gifts, mineCounts]);
 
-  async function confirm(gift: GiftView) {
-    const result = await reserve(gift.id);
+  async function confirm(gift: GiftView, qty = 1) {
+    // Uma reserva por unidade (cada uma com seu token, para poder desfazer uma a uma).
+    let ok = 0;
+    let taken = false;
+    for (let n = 0; n < qty; n++) {
+      const result = await reserve(gift.id);
+      if (result.status === "ok") ok++;
+      else {
+        taken = true;
+        break;
+      }
+    }
     setSelected(null);
-    if (result.status === "ok") {
+    if (ok > 0) {
       setLastChosen(gift);
-      setAnnounce(giftsCopy.ok(gift.title));
+      setAnnounce(giftsCopy.ok(ok > 1 ? `${ok}× ${gift.title}` : gift.title));
+      if (taken) toast(`Deu para escolher ${ok}. As outras unidades alguém acabou de escolher.`);
       // Espera o modal fechar (ele trava a rolagem do body), leva à casinha e só então
       // dispara a reação dos noivos, para ela acontecer na frente do convidado.
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -103,12 +118,12 @@ export function GiftsExperience() {
 
         {mine.length > 0 && (
           <div className="mt-6">
-            <MyGifts gifts={mine} onUndo={onUndo} />
+            <MyGifts gifts={mine} counts={mineCounts} onUndo={onUndo} />
           </div>
         )}
 
         <div className="mt-6">
-          <GiftList gifts={gifts} myIds={myIds} onChoose={setSelected} />
+          <GiftList gifts={gifts} mineCounts={mineCounts} onChoose={setSelected} />
         </div>
 
       </div>

@@ -10,13 +10,15 @@ import { PaletteNote } from "./PaletteNote";
 
 interface Props {
   gift: GiftView;
-  isMine: boolean;
+  /** Quantas unidades deste presente este convidado já escolheu (neste aparelho). */
+  mineCount: number;
   onChoose(gift: GiftView): void;
 }
 
-export function GiftCard({ gift, isMine, onChoose }: Props) {
+export function GiftCard({ gift, mineCount, onChoose }: Props) {
   const soldOut = gift.remaining <= 0;
-  const disabled = soldOut || isMine;
+  const isMine = mineCount > 0;
+  const multi = gift.quantity > 1;
   const links = storeLinks(gift);
   const doubt = doubtLink(gift.title);
   const titleId = `gift-${gift.id}`;
@@ -28,7 +30,12 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
       data-gift={gift.id}
     >
       <div className="flex gap-4">
-        <div className="flex h-[96px] w-[96px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-cream">
+        <div className="relative flex h-[96px] w-[96px] shrink-0 items-center justify-center rounded-xl bg-cream">
+          {multi && (
+            <span className="sticker absolute -top-3 -right-4 z-10 rotate-[8deg] text-[1rem] leading-tight whitespace-nowrap" aria-hidden="true">
+              precisamos de {gift.quantity}
+            </span>
+          )}
           {gift.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={gift.image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
@@ -42,25 +49,35 @@ export function GiftCard({ gift, isMine, onChoose }: Props) {
           </h3>
           <p className="mt-1 text-[0.9rem] leading-snug text-ink/85">{gift.description}</p>
           {gift.category === "utensilios" && !soldOut && <PaletteNote compact />}
-          {gift.quantity > 1 && !soldOut && (
-            <p className="mt-1 text-[0.8rem] font-medium tracking-wide text-olive-900">
-              {giftsCopy.remaining(gift.remaining, gift.quantity)}
+          {multi && !soldOut && (
+            <p className="mt-1.5 text-[0.8rem] leading-snug text-olive-900">
+              <b className="font-medium">{giftsCopy.remaining(gift.remaining, gift.quantity)}.</b> {giftsCopy.multiNote}
             </p>
           )}
         </div>
       </div>
 
       <div className="mt-4">
-        {isMine ? (
-          <p className="flex min-h-[48px] items-center justify-center border border-olive-700/40 text-[0.82rem] font-medium tracking-[0.14em] text-olive-700 uppercase">
-            {giftsCopy.mine}
+        {isMine && (soldOut || !multi) ? (
+          <p className="flex min-h-[48px] items-center justify-center rounded-full border border-olive-700/40 text-[0.82rem] font-medium tracking-[0.1em] text-olive-700 uppercase">
+            {multi ? giftsCopy.mineCount(mineCount) : giftsCopy.mine}
           </p>
+        ) : isMine ? (
+          <div className="flex flex-col gap-2">
+            <span className="flex min-h-[40px] items-center justify-center rounded-full border border-olive-700/40 text-[0.8rem] font-medium tracking-[0.08em] text-olive-700 uppercase">
+              {giftsCopy.mineCount(mineCount)}
+            </span>
+            <button type="button" className="btn btn-primary w-full" onClick={() => onChoose(gift)}>
+              {giftsCopy.chooseMore}
+              <span className="sr-only">: {gift.title}</span>
+            </button>
+          </div>
         ) : soldOut ? (
           <p className="flex min-h-[48px] items-center justify-center text-[0.82rem] font-medium tracking-[0.14em] text-gray uppercase">
             {giftsCopy.chosen}
           </p>
         ) : (
-          <button type="button" className="btn btn-primary w-full" onClick={() => onChoose(gift)} disabled={disabled}>
+          <button type="button" className="btn btn-primary w-full" onClick={() => onChoose(gift)}>
             {giftsCopy.choose}
             <span className="sr-only">: {gift.title}</span>
           </button>

@@ -8,11 +8,11 @@ import { GiftCard } from "./GiftCard";
 
 interface Props {
   gifts: GiftView[] | null;
-  myIds: Set<string>;
+  mineCounts: Map<string, number>;
   onChoose(gift: GiftView): void;
 }
 
-export function GiftList({ gifts, myIds, onChoose }: Props) {
+export function GiftList({ gifts, mineCounts, onChoose }: Props) {
   const [filter, setFilter] = useState<Tier | "all">("all");
 
   const groups = useMemo(() => {
@@ -64,7 +64,7 @@ export function GiftList({ gifts, myIds, onChoose }: Props) {
             <p className="mt-1 text-[0.88rem] text-olive-900">{TIER_LABEL[g.tier].note}</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1">
               {g.items.map((gift) => (
-                <GiftCard key={gift.id} gift={gift} isMine={myIds.has(gift.id)} onChoose={onChoose} />
+                <GiftCard key={gift.id} gift={gift} mineCount={mineCounts.get(gift.id) ?? 0} onChoose={onChoose} />
               ))}
             </div>
           </section>

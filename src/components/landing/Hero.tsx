@@ -7,6 +7,7 @@ import { site } from "@/config/site";
 import assets from "@/generated/assets.json";
 import { copy } from "@/content/copy";
 import { BorderLine } from "@/components/ornaments/BorderLine";
+import { ScrollHint } from "./ScrollHint";
 
 const spring = { type: "spring" as const, stiffness: 170, damping: 16 };
 
@@ -56,7 +57,7 @@ export function Hero() {
 
         {/* o casal, nas proporções da página 1 do convite: rosto em foto, véu e gravata */}
         <div className="relative mx-auto mt-[7%] aspect-[500/235] w-full">
-          <motion.div className="absolute top-[0%] left-[2%] w-[52%]" {...pop(0.45)}>
+          <motion.div className="absolute top-[6%] left-[7%] w-[45%]" {...pop(0.45)}>
             <div className="hero-float relative">
               <img src="/assets/convite/veu.webp" alt="" aria-hidden="true" className="absolute -top-[16%] left-[38%] w-[58%] max-w-none" />
               <img src={assets.faces.kawany.sorriso ?? "/assets/convite/rosto-kawany.webp"} alt="Kawany" className="relative w-full" fetchPriority="high" />
@@ -99,6 +100,7 @@ export function Hero() {
       </div>
 
       <BorderLine className="mt-6" delay={1.2} />
+      <ScrollHint />
     </header>
   );
 }

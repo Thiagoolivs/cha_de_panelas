@@ -93,6 +93,18 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
     [store],
   );
 
+  // Atualização funcional: várias reservas seguidas não se sobrescrevem.
+  const addMine = useCallback(
+    (entry: MyGift) => {
+      setMyGifts((prev) => {
+        const next = [...prev, entry];
+        store.set(MINE_KEY, JSON.stringify(next));
+        return next;
+      });
+    },
+    [store],
+  );
+
   const setGuestName = useCallback(
     (name: string) => {
       const n = name.trim();
@@ -112,7 +124,7 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
       const name = guestName ?? "";
       const result = await repo.reserve(giftId, name);
       if (result.status === "ok") {
-        persistMine([...myGifts, { giftId, token: result.token }]);
+        addMine({ giftId, token: result.token });
         // Atualização otimista: o presente já aparece na lista e na casinha, sem esperar
         // a ida e volta ao servidor (no celular isso atrasava tudo). A reação dos noivos é
         // disparada por quem chamou, quando a casinha estiver visível.
@@ -131,19 +143,20 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
       }
       return result;
     },
-    [repo, guestName, myGifts, persistMine, refresh, gifts],
+    [repo, guestName, addMine, refresh, gifts],
   );
 
   const undo = useCallback(
     async (giftId: string) => {
-      const mine = myGifts.find((m) => m.giftId === giftId);
+      const mine = [...myGifts].reverse().find((m) => m.giftId === giftId);
       if (!mine) return;
       await repo.undo(giftId, mine.token);
-      persistMine(myGifts.filter((m) => m.giftId !== giftId));
+      persistMine(myGifts.filter((m) => m !== mine));
       await refresh();
     },
     [repo, myGifts, persistMine, refresh],
   );
+
 
   // Ao abrir o site, esquece escolhas que não existem mais no servidor (ex.: banco zerado
   // antes do convite). Só na primeira carga, para não brigar com uma reserva recém-feita.

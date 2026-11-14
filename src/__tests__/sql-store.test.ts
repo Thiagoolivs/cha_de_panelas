@@ -28,9 +28,9 @@ describe("SqlGiftsStore (Postgres)", () => {
   });
 
   it("reservas simultâneas nunca passam da quantidade", async () => {
-    const results = await Promise.all(["A1", "B2", "C3", "D4", "E5"].map((n) => store.reserve("jogo-de-copos", n)));
+    const results = await Promise.all(["A1", "B2", "C3", "D4", "E5"].map((n) => store.reserve("tabua-de-corte", n)));
     expect(results.filter((r) => r.status === "ok")).toHaveLength(2);
-    expect((await store.houseState()).find((h) => h.giftId === "jogo-de-copos")?.count).toBe(2);
+    expect((await store.houseState()).find((h) => h.giftId === "tabua-de-corte")?.count).toBe(2);
   });
 
   it("valida nome, presente e recado", async () => {

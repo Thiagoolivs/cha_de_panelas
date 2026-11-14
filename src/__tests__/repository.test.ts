@@ -19,11 +19,11 @@ describe("MockGiftsRepository", () => {
 
   it("respeita a quantidade pedida (2) e empilha na casa", async () => {
     const r = repo();
-    expect((await r.reserve("jogo-de-copos", "Ana")).status).toBe("ok");
-    expect((await r.reserve("jogo-de-copos", "Bruno")).status).toBe("ok");
-    expect((await r.reserve("jogo-de-copos", "Caio")).status).toBe("taken");
+    expect((await r.reserve("tabua-de-corte", "Ana")).status).toBe("ok");
+    expect((await r.reserve("tabua-de-corte", "Bruno")).status).toBe("ok");
+    expect((await r.reserve("tabua-de-corte", "Caio")).status).toBe("taken");
     const house = await r.houseState();
-    expect(house.find((h) => h.giftId === "jogo-de-copos")?.count).toBe(2);
+    expect(house.find((h) => h.giftId === "tabua-de-corte")?.count).toBe(2);
   });
 
   it("listGifts e houseState nunca trazem nome", async () => {

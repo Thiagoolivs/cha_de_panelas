@@ -256,3 +256,10 @@ body {
 }
 .hero-float { animation: hero-float 4s ease-in-out 1.2s infinite; will-change: transform; }
 .hero-float-b { animation-duration: 4.6s; animation-delay: 2.2s; }
+
+/* Setinha "role para baixo" da abertura */
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+.scroll-hint-arrow { animation: scroll-hint 1.4s ease-in-out infinite; }

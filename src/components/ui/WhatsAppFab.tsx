@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { site } from "@/config/site";
 import { doubtLink } from "@/lib/contact";
 
@@ -8,7 +9,16 @@ import { doubtLink } from "@/lib/contact";
 export function WhatsAppFab() {
   const path = usePathname();
   const href = doubtLink();
+  // Na abertura da página principal, dá lugar à setinha "role para baixo".
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY >= 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   if (!href || path?.startsWith("/admin") || path === "/og") return null;
+  if (path === "/" && !scrolled) return null;
   return (
     <a
       href={href}

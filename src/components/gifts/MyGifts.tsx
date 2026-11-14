@@ -7,10 +7,11 @@ import { giftsCopy } from "@/content/gifts-copy";
 
 interface Props {
   gifts: GiftView[];
+  counts: Map<string, number>;
   onUndo(gift: GiftView): Promise<void>;
 }
 
-export function MyGifts({ gifts, onUndo }: Props) {
+export function MyGifts({ gifts, counts, onUndo }: Props) {
   const [busy, setBusy] = useState<string | null>(null);
   return (
     <section aria-labelledby="my-gifts" className="card p-4">
@@ -25,7 +26,10 @@ export function MyGifts({ gifts, onUndo }: Props) {
             {gifts.map((g) => (
               <li key={g.id} className="flex items-center gap-3 py-2">
                 <GiftIcon iconKey={g.iconKey} className="h-10 w-10 shrink-0" />
-                <span className="flex-1 font-serif text-[1.12rem] leading-tight">{g.title}</span>
+                <span className="flex-1 font-serif text-[1.12rem] leading-tight">
+                  {(counts.get(g.id) ?? 1) > 1 && <span className="mr-1 font-sans text-[0.85rem] text-olive-700">{counts.get(g.id)}×</span>}
+                  {g.title}
+                </span>
                 <button
                   type="button"
                   className="btn btn-ghost"

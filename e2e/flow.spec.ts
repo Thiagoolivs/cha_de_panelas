@@ -65,7 +65,7 @@ test("item com quantidade 2 aceita duas pessoas", async ({ page }) => {
   await page.goto("/presentes");
   await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Ana"));
   await page.reload();
-  const card = page.locator('[data-gift="jogo-de-copos"]');
+  const card = page.locator('[data-gift="tabua-de-corte"]');
   await expect(card).toContainText("Faltam 2 de 2");
   await card.getByRole("button", { name: /Escolher/ }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
