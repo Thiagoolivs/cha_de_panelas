@@ -45,7 +45,18 @@ export async function handle(fn: (store: ReturnType<typeof getStore>) => Promise
 
 /** Confere a senha do admin (header Authorization: Bearer <ADMIN_PASSWORD>). */
 export function isAdmin(req: Request): boolean {
-  const expected = process.env.ADMIN_PASSWORD;
+  return hasPassword(req, process.env.ADMIN_PASSWORD);
+}
+
+/** Confere a senha do organizador (ORGANIZER_PASSWORD), diferente da senha da noiva. */
+export function isOrganizer(req: Request): boolean {
+  const pass = process.env.ORGANIZER_PASSWORD;
+  // Nunca aceita a mesma senha da noiva: o painel dela não pode abrir o do organizador.
+  if (pass && pass === process.env.ADMIN_PASSWORD) return false;
+  return hasPassword(req, pass);
+}
+
+function hasPassword(req: Request, expected: string | undefined): boolean {
   if (!expected) return false;
   const got = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
   const a = Buffer.from(got);

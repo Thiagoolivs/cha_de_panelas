@@ -17,7 +17,7 @@ export function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  if (!href || path?.startsWith("/admin") || path === "/og") return null;
+  if (!href || path?.startsWith("/admin") || path?.startsWith("/organizador") || path === "/og") return null;
   if (path === "/" && !scrolled) return null;
   return (
     <a

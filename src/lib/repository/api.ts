@@ -1,6 +1,15 @@
-import type { AdminSnapshot, GiftView, GiftsRepository, HouseItem, Message, ReserveResult } from "@/lib/types";
+import type { AdminSnapshot, GiftView, GiftsRepository, HouseItem, Message, OrganizerSnapshot, ReserveResult } from "@/lib/types";
 
 export const ADMIN_KEY = "chadosnoivos:admin-password";
+export const ORGANIZER_KEY = "chadosnoivos:organizer-password";
+
+function sessionPass(key: string): string {
+  try {
+    return sessionStorage.getItem(key) ?? "";
+  } catch {
+    return "";
+  }
+}
 
 export class UnauthorizedError extends Error {}
 
@@ -31,12 +40,15 @@ export class ApiGiftsRepository implements GiftsRepository {
     await post("/api/messages", m);
   }
   adminView() {
-    let pass = "";
-    try {
-      pass = sessionStorage.getItem(ADMIN_KEY) ?? "";
-    } catch {
-      /* sem sessionStorage */
-    }
-    return call<AdminSnapshot>("/api/admin", { headers: { Authorization: `Bearer ${pass}` } });
+    return call<AdminSnapshot>("/api/admin", { headers: { Authorization: `Bearer ${sessionPass(ADMIN_KEY)}` } });
+  }
+  contribute(amount: number) {
+    return post<{ token: string }>("/api/pix", { amount });
+  }
+  async undoContribution(token: string) {
+    await post("/api/pix/undo", { token });
+  }
+  organizerView() {
+    return call<OrganizerSnapshot>("/api/organizador", { headers: { Authorization: `Bearer ${sessionPass(ORGANIZER_KEY)}` } });
   }
 }

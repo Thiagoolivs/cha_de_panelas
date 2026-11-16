@@ -69,4 +69,31 @@ describe("SqlGiftsStore (Postgres)", () => {
     expect(JSON.stringify(await store.listGifts())).not.toContain("Nome Único");
     expect(JSON.stringify(await store.houseState())).not.toContain("Nome Único");
   });
+
+  it("Pix anônimo: aceita só as cotas, soma, desfaz e não guarda nome", async () => {
+    const a = await store.contribute(100);
+    await store.contribute(250);
+    await expect(store.contribute(37)).rejects.toBeInstanceOf(ValidationError);
+    await expect(store.contribute("100; drop table")).rejects.toBeInstanceOf(ValidationError);
+    expect((await store.adminView()).pix).toEqual({ total: 350, count: 2 });
+    expect(await store.undoContribution("errado")).toBe(false);
+    expect(await store.undoContribution(a.token)).toBe(true);
+    expect((await store.adminView()).pix).toEqual({ total: 250, count: 1 });
+  });
+
+  it("organizerView mostra nome ↔ presente; adminView continua sem isso", async () => {
+    await store.reserve("airfryer", "Maria Secreta");
+    await store.reserve("tabua-de-corte", "João Oculto");
+    await store.reserve("tabua-de-corte", "Maria Secreta");
+    const org = await store.organizerView();
+    expect(org.reservations.map((r) => [r.giftId, r.guestName])).toEqual([
+      ["airfryer", "Maria Secreta"],
+      ["tabua-de-corte", "João Oculto"],
+      ["tabua-de-corte", "Maria Secreta"],
+    ]);
+    expect(org.reservations[0].giftTitle).toBe("Air fryer");
+    const admin = await store.adminView();
+    expect(JSON.stringify(admin.gifts)).not.toContain("Maria");
+    expect(Object.keys(admin.pix).sort()).toEqual(["count", "total"]);
+  });
 });

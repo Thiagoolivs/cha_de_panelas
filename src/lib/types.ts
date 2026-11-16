@@ -60,6 +60,12 @@ export interface Message {
   relation?: string;
 }
 
+/** Pix marcado pelos convidados: só a soma. Não guarda nome, data nem valor individual visível. */
+export interface PixSummary {
+  total: number;
+  count: number;
+}
+
 /** O que a Kawany vê. Sem nomes ligados a presentes, sem datas. */
 export interface AdminSnapshot {
   gifts: {
@@ -72,6 +78,13 @@ export interface AdminSnapshot {
   }[];
   guests: { name: string; attending: boolean }[];
   messages: { authorName: string; relation?: string; text: string }[];
+  pix: PixSummary;
+}
+
+/** Visão do organizador (não da noiva): quem escolheu cada presente. */
+export interface OrganizerSnapshot {
+  reservations: { giftId: string; giftTitle: string; guestName: string; at: string | null }[];
+  pix: PixSummary;
 }
 
 export interface GiftsRepository {
@@ -82,6 +95,10 @@ export interface GiftsRepository {
   houseState(): Promise<HouseItem[]>;
   sendMessage(m: Message): Promise<void>;
   adminView(): Promise<AdminSnapshot>;
+  /** Marca um Pix anônimo (só o valor). O token permite desfazer. */
+  contribute(amount: number): Promise<{ token: string }>;
+  undoContribution(token: string): Promise<void>;
+  organizerView(): Promise<OrganizerSnapshot>;
 }
 
 /** Extras usados só pelo modo demonstração. Implementação real não precisa ter. */

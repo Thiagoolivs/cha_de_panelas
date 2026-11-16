@@ -121,3 +121,28 @@ test("teclado: cômodo da casa abre com Enter e Esc fecha o card", async ({ page
   await page.getByRole("button", { name: "Voltar à casa" }).click();
   await expect(page.getByRole("button", { name: "Voltar à casa" })).toHaveCount(0);
 });
+
+test("Pix anônimo: marca o valor, a noiva vê só o total, e dá para desfazer", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("radio", { name: "R$ 100,00" }).click();
+  await page.getByRole("button", { name: "Confirmar R$ 100,00" }).click();
+  await expect(page.getByText("Anotado: R$ 100,00. Obrigado!")).toBeVisible();
+  await expect(page.getByText(/ninguém fica sabendo quem mandou nem quanto/)).toBeVisible();
+  await page.goto("/admin");
+  await expect(page.getByText("R$ 100,00", { exact: true })).toBeVisible();
+  await page.goto("/");
+  await page.getByRole("button", { name: "Desfazer" }).click();
+  await expect(page.getByText("Anotado: R$ 100,00. Obrigado!")).toHaveCount(0);
+});
+
+test("organizador vê quem escolheu cada presente", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.goto("/presentes");
+  await page.locator('[data-gift="airfryer"]').getByRole("button", { name: /Escolher este presente/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
+  await expect(page.getByRole("region", { name: "Meus presentes" })).toContainText("Air fryer");
+  await page.goto("/organizador");
+  await expect(page.getByText(/^Air fryer/)).toBeVisible();
+  await expect(page.getByText("Convidada Teste")).toBeVisible();
+});

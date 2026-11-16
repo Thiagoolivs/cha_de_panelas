@@ -1,9 +1,10 @@
 /**
  * Regras de negócio sobre o banco (Postgres). Independe do driver: em produção usa
- * `pg` (ver db.ts); nos testes, PGlite. Nada aqui devolve quem escolheu cada presente.
+ * `pg` (ver db.ts); nos testes, PGlite. Só organizerView (protegida por outra senha)
+ * devolve quem escolheu cada presente; a visão da noiva nunca.
  */
 import { createHash, randomBytes } from "node:crypto";
-import type { AdminSnapshot, Gift, GiftView, HouseItem, Message, ReserveResult } from "@/lib/types";
+import type { AdminSnapshot, Gift, GiftView, HouseItem, Message, OrganizerSnapshot, PixSummary, ReserveResult } from "@/lib/types";
 
 export interface Queryable {
   query<R = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<{ rows: R[] }>;
@@ -25,6 +26,11 @@ create index if not exists reservations_gift_idx on reservations (gift_id);
 create table if not exists app_meta (
   key text primary key,
   value text not null
+);
+create table if not exists contributions (
+  id bigserial primary key,
+  amount integer not null,
+  token_hash text not null unique
 );
 create table if not exists messages (
   id bigserial primary key,
@@ -64,6 +70,8 @@ export class SqlGiftsStore {
     private readonly gifts: Gift[],
     /** Se definido e diferente do último aplicado, zera reservas e recados uma única vez. */
     private readonly resetKey: string | null = null,
+    /** Valores de Pix aceitos (as cotas do site). */
+    private readonly pixValues: number[] = [50, 100, 150, 250],
   ) {}
 
   private ensure() {
@@ -81,6 +89,7 @@ export class SqlGiftsStore {
       if (rows[0]?.value === key) return;
       await q.query("delete from reservations");
       await q.query("delete from messages");
+      await q.query("delete from contributions");
       await q.query(
         "insert into app_meta (key, value) values ('last_reset', $1) on conflict (key) do update set value = excluded.value",
         [key],
@@ -154,6 +163,45 @@ export class SqlGiftsStore {
     await this.db.query("insert into messages (author_name, relation, body) values ($1, $2, $3)", [author, relation, text]);
   }
 
+  /** Pix anônimo: guarda só o valor (e o hash do token para desfazer). */
+  async contribute(amount: unknown): Promise<{ token: string }> {
+    await this.ensure();
+    const v = Number(amount);
+    if (!this.pixValues.includes(v)) throw new ValidationError("valor");
+    const token = randomBytes(18).toString("base64url");
+    await this.db.query("insert into contributions (amount, token_hash) values ($1, $2)", [v, hashToken(token)]);
+    return { token };
+  }
+
+  async undoContribution(token: unknown): Promise<boolean> {
+    await this.ensure();
+    if (typeof token !== "string" || !token) return false;
+    const { rows } = await this.db.query<{ id: string }>("delete from contributions where token_hash = $1 returning id", [hashToken(token)]);
+    return rows.length > 0;
+  }
+
+  private async pixSummary(): Promise<PixSummary> {
+    const { rows } = await this.db.query<{ total: string | number | null; n: string | number }>(
+      "select coalesce(sum(amount), 0) as total, count(*) as n from contributions",
+    );
+    return { total: Number(rows[0]?.total ?? 0), count: Number(rows[0]?.n ?? 0) };
+  }
+
+  /** Visão do organizador: nome ↔ presente. Protegida por ORGANIZER_PASSWORD, nunca pela senha da noiva. */
+  async organizerView(): Promise<OrganizerSnapshot> {
+    await this.ensure();
+    const { rows } = await this.db.query<{ gift_id: string; guest_name: string; created_at: Date | string | null }>(
+      "select gift_id, guest_name, created_at from reservations order by created_at, id",
+    );
+    const reservations = rows.map((r) => ({
+      giftId: r.gift_id,
+      giftTitle: this.gift(r.gift_id)?.title ?? r.gift_id,
+      guestName: r.guest_name,
+      at: r.created_at ? new Date(r.created_at).toISOString() : null,
+    }));
+    return { reservations, pix: await this.pixSummary() };
+  }
+
   /** Visão da noiva: o que vai ganhar, nunca quem deu. Sem datas, sem ligação nome↔presente. */
   async adminView(): Promise<AdminSnapshot> {
     await this.ensure();
@@ -189,6 +237,6 @@ export class SqlGiftsStore {
       .map((m) => ({ authorName: m.author_name, text: m.body, ...(m.relation ? { relation: m.relation } : {}) }))
       .sort((a, b) => hash32(a.authorName + a.text) - hash32(b.authorName + b.text));
 
-    return { gifts, guests, messages };
+    return { gifts, guests, messages, pix: await this.pixSummary() };
   }
 }

@@ -144,7 +144,16 @@ export function AdminPreview() {
         <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-olive-700/15" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
           <div className="h-full rounded-full bg-olive-700 transition-[width] duration-700" style={{ width: `${pct}%` }} />
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 text-center">
+        <div className="mt-4 rounded-xl bg-olive-700 px-4 py-3 text-white">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[0.85rem]">Pix marcados pelos convidados</p>
+            <p className="shrink-0 font-display text-[1.6rem] leading-none whitespace-nowrap">R$ {snap.pix.total.toLocaleString("pt-BR")},00</p>
+          </div>
+          <p className="mt-1 text-[0.75rem] text-white/80">
+            {snap.pix.count === 1 ? "1 Pix marcado" : `${snap.pix.count} Pix marcados`} · anônimo, sem nomes. Confira no extrato do banco.
+          </p>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-3 text-center">
           <div className="rounded-xl bg-cream p-2">
             <p className="font-display text-[1.6rem] text-olive-700">{snap.messages.length}</p>
             <p className="text-[0.78rem]">recados</p>

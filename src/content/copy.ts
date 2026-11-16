@@ -36,6 +36,17 @@ export const copy = {
     copy: "Toque para copiar",
     copied: "Copiado!",
     soon: "Chave Pix em breve",
+    mark: {
+      title: "Já fez o Pix?",
+      lead: "Toque no valor que você enviou.",
+      confirm: (v: string) => `Confirmar ${v}`,
+      privacy:
+        "É anônimo: não pedimos seu nome e ninguém fica sabendo quem mandou nem quanto. Serve só para a noiva saber o total que recebeu.",
+      done: (v: string) => `Anotado: ${v}. Obrigado!`,
+      undo: "Desfazer",
+      another: "Mandou outro? Marque de novo.",
+      error: "Não deu para anotar agora. Tente de novo em instantes.",
+    },
   },
   paleta: {
     title: "Paleta dos utensílios",

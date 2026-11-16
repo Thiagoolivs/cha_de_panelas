@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { site } from "@/config/site";
 import { copy } from "@/content/copy";
+import { PixMark } from "./PixMark";
 
 const brl = (v: number) => `R$ ${v},00`;
 
@@ -78,6 +79,8 @@ export function Pix() {
           {key ? (copied ? copy.pix.copied : copy.pix.copy) : ""}
         </p>
       </div>
+
+      {key && <PixMark />}
     </section>
   );
 }

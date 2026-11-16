@@ -5,6 +5,8 @@ import type {
   GiftView,
   HouseItem,
   Message,
+  OrganizerSnapshot,
+  PixSummary,
   ReserveResult,
 } from "@/lib/types";
 import type { KeyValueStore } from "./storage";
@@ -20,7 +22,11 @@ interface Reservation {
 interface State {
   reservations: Reservation[];
   messages: Message[];
+  /** Pix anônimo: só valor e token (para desfazer). */
+  contributions?: { token: string; amount: number }[];
 }
+
+const PIX_VALUES = [50, 100, 150, 250];
 
 const FAKE_NAMES = [
   "Tia Lúcia", "Rafaela", "Bruno", "Dona Cida", "Marcos", "Júlia", "Pedro Henrique",
@@ -179,7 +185,39 @@ export class MockGiftsRepository implements DemoCapableRepository {
       .map((m) => ({ authorName: m.authorName, text: m.text, ...(m.relation ? { relation: m.relation } : {}) }))
       .sort((a, b) => hash(a.authorName + a.text) - hash(b.authorName + b.text));
 
-    return { gifts, guests, messages };
+    return { gifts, guests, messages, pix: this.pix(s) };
+  }
+
+  private pix(s: State): PixSummary {
+    const c = s.contributions ?? [];
+    return { total: c.reduce((a, x) => a + x.amount, 0), count: c.length };
+  }
+
+  async contribute(amount: number): Promise<{ token: string }> {
+    await this.wait();
+    if (!PIX_VALUES.includes(amount)) throw new Error("valor");
+    const s = this.load();
+    const t = token();
+    s.contributions = [...(s.contributions ?? []), { token: t, amount }];
+    this.save(s);
+    return { token: t };
+  }
+
+  async undoContribution(tokenToUndo: string): Promise<void> {
+    await this.wait();
+    const s = this.load();
+    s.contributions = (s.contributions ?? []).filter((c) => c.token !== tokenToUndo);
+    this.save(s);
+  }
+
+  async organizerView(): Promise<OrganizerSnapshot> {
+    await this.wait();
+    const s = this.load();
+    const title = new Map(this.gifts.map((g) => [g.id, g.title]));
+    return {
+      reservations: s.reservations.map((r) => ({ giftId: r.giftId, giftTitle: title.get(r.giftId) ?? r.giftId, guestName: r.guestName, at: null })),
+      pix: this.pix(s),
+    };
   }
 
   readonly demo = {

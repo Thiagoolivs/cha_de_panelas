@@ -1,6 +1,7 @@
 import "server-only";
 import { Pool } from "pg";
 import { defaultGifts } from "@/data/gifts.default";
+import { site } from "@/config/site";
 import { SqlGiftsStore, type Db } from "./store";
 
 let store: SqlGiftsStore | null = null;
@@ -29,6 +30,11 @@ export function getStore(): SqlGiftsStore {
       }
     },
   };
-  store = new SqlGiftsStore(db, defaultGifts, process.env.DATA_RESET_KEY ?? null);
+  store = new SqlGiftsStore(
+    db,
+    defaultGifts,
+    process.env.DATA_RESET_KEY ?? null,
+    site.pix.quotas.map((q) => q.value),
+  );
   return store;
 }
