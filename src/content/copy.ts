@@ -29,6 +29,7 @@ export const copy = {
   },
   vamo: { word: "VAMO?", cta: "VAMOS?????" },
   agenda: { button: "Adicionar à agenda" },
+  local: { label: "Onde vai ser", route: "Como chegar", waze: "Waze" },
   pix: {
     title: "Caso você queira contribuir de outra forma… $$$",
     label: "Nosso Pix",

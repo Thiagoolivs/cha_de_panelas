@@ -8,6 +8,7 @@ import assets from "@/generated/assets.json";
 import { copy } from "@/content/copy";
 import { BorderLine } from "@/components/ornaments/BorderLine";
 import { ScrollHint } from "./ScrollHint";
+import { EventAddress } from "./EventAddress";
 
 const spring = { type: "spring" as const, stiffness: 170, damping: 16 };
 
@@ -85,9 +86,15 @@ export function Hero() {
           </p>
         </motion.div>
 
-        <motion.p className="hand mt-5 text-[1.3rem]" {...pop(1.1, { y: 8 })}>
-          {site.event.address ?? copy.hero.addressSoon}
-        </motion.p>
+        {site.event.address ? (
+          <motion.div className="mt-10" {...pop(1.1, { y: 8 })}>
+            <EventAddress />
+          </motion.div>
+        ) : (
+          <motion.p className="hand mt-5 text-[1.3rem]" {...pop(1.1, { y: 8 })}>
+            {copy.hero.addressSoon}
+          </motion.p>
+        )}
 
         <motion.div className="mt-6 flex flex-col items-center gap-1" {...pop(1.2, { y: 10 })}>
           <Link href="/presentes" className="btn btn-primary w-full max-w-[300px]">

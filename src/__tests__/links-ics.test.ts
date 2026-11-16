@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { storeLinks } from "@/lib/links";
+import { routeLinks, storeLinks } from "@/lib/links";
 import { buildIcs } from "@/lib/ics";
 
 describe("storeLinks", () => {
@@ -28,5 +28,13 @@ describe("buildIcs", () => {
     expect(ics).toContain("DTEND:20261212T210000Z");
     expect(ics).toContain(String.raw`SUMMARY:Chá\; dos\, Noivos`);
     expect(ics).not.toContain("LOCATION");
+  });
+});
+
+describe("routeLinks", () => {
+  it("gera rota no Google Maps e no Waze com o endereço codificado", () => {
+    const l = routeLinks("Rua A, 10 - Bairro, São Paulo, SP");
+    expect(l.google).toBe("https://www.google.com/maps/dir/?api=1&destination=Rua%20A%2C%2010%20-%20Bairro%2C%20S%C3%A3o%20Paulo%2C%20SP");
+    expect(l.waze).toBe("https://waze.com/ul?q=Rua%20A%2C%2010%20-%20Bairro%2C%20S%C3%A3o%20Paulo%2C%20SP&navigate=yes");
   });
 });

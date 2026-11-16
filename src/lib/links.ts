@@ -23,3 +23,12 @@ export function storeLinks(gift: Pick<Gift, "searchQuery" | "featuredUrl">): Sto
   if (gift.featuredUrl) links.unshift({ label: "Sugestão", href: gift.featuredUrl });
   return links;
 }
+
+/** Rotas até o local do chá: Google Maps (abre o app no celular) e Waze. */
+export function routeLinks(place: string): { google: string; waze: string } {
+  const enc = encodeURIComponent(place.trim());
+  return {
+    google: `https://www.google.com/maps/dir/?api=1&destination=${enc}`,
+    waze: `https://waze.com/ul?q=${enc}&navigate=yes`,
+  };
+}

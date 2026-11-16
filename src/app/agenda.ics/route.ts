@@ -1,5 +1,6 @@
 import { site } from "@/config/site";
 import { buildIcs } from "@/lib/ics";
+import { eventPlace } from "@/lib/event";
 
 export const dynamic = "force-static";
 
@@ -8,7 +9,7 @@ export function GET() {
     uid: "cha-dos-noivos-kaw-than-20261212@chadosnoivos",
     title: "Chá dos Noivos · Kaw e Than",
     description: `Chá de panela da Kawany e do Nathan. Lista de presentes: ${site.url}/presentes`,
-    location: site.event.address,
+    location: eventPlace(),
     startISO: site.event.startISO,
     endISO: site.event.endISO,
     url: site.url,

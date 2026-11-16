@@ -14,7 +14,7 @@ test("landing mostra o convite e oferece a agenda", async ({ page, request }) =>
   await expect(page.getByText(/os noivos não verão quem escolheu cada presente/i).first()).toBeAttached();
   const ics = await request.get("/agenda.ics");
   expect(ics.headers()["content-type"]).toContain("text/calendar");
-  expect(await ics.text()).toContain("DTSTART:20261212T170000Z");
+  expect(await ics.text()).toContain("DTSTART:20261212T163000Z");
 });
 
 test("escolher um presente em até 4 toques com o nome salvo, ver na lista e desfazer", async ({ page }) => {

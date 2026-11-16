@@ -18,7 +18,10 @@ export const site = {
     dayLabel: "12",
     monthLabel: "DEZ",
     timeLabel: "às 13h30",
+    /** Rua e número (ex.: "Rua X, 123"). */
     address: env(process.env.NEXT_PUBLIC_EVENT_ADDRESS),
+    /** Bairro e cidade, mostrados embaixo e usados na rota (ex.: "Vila Jacuí · São Paulo, SP"). */
+    area: env(process.env.NEXT_PUBLIC_EVENT_AREA),
   },
   pix: {
     key: env(process.env.NEXT_PUBLIC_PIX_KEY),
