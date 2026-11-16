@@ -15,16 +15,16 @@ describe("storeLinks", () => {
 });
 
 describe("buildIcs", () => {
-  it("converte 14h de Brasília para 17h UTC", () => {
+  it("converte 13h30 de Brasília para 16h30 UTC", () => {
     const ics = buildIcs({
       uid: "u",
       title: "Chá; dos, Noivos",
       description: "d",
       location: null,
-      startISO: "2026-12-12T14:00:00-03:00",
+      startISO: "2026-12-12T13:30:00-03:00",
       endISO: "2026-12-12T18:00:00-03:00",
     });
-    expect(ics).toContain("DTSTART:20261212T170000Z");
+    expect(ics).toContain("DTSTART:20261212T163000Z");
     expect(ics).toContain("DTEND:20261212T210000Z");
     expect(ics).toContain(String.raw`SUMMARY:Chá\; dos\, Noivos`);
     expect(ics).not.toContain("LOCATION");

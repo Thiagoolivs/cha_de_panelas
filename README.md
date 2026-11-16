@@ -2,7 +2,7 @@
 
 Site do chá de panela da **Kawany** e do **Nathan**: convite, lista de presentes com a **casinha ilustrada** onde cada presente entra, o casal reagindo, recado para a noiva e uma prévia do painel dela.
 
-Evento: **12/12/2026, 14h** (America/Sao_Paulo).
+Evento: **12/12/2026, 13h30** (America/Sao_Paulo).
 
 Esta etapa é só a camada visual. Os dados são simulados (repositório mock em memória + `localStorage`), sem backend.
 

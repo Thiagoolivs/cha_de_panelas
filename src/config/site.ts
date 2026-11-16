@@ -6,18 +6,18 @@ const env = (v: string | undefined) => (v && v.trim() ? v.trim() : null);
 
 export const site = {
   title: "Chá dos Noivos · Kaw e Than",
-  description: "Chá de panela da Kawany e do Nathan. 12 de dezembro de 2026, às 14h.",
+  description: "Chá de panela da Kawany e do Nathan. 12 de dezembro de 2026, às 13h30.",
   url: env(process.env.NEXT_PUBLIC_SITE_URL) ?? "http://localhost:3000",
   demo: process.env.NEXT_PUBLIC_DEMO === "true",
   couple: { bride: "Kawany", groom: "Nathan", short: "Kaw e Than" },
   event: {
-    /** 12/12/2026 14h em America/Sao_Paulo (UTC-3, sem horário de verão). */
-    startISO: "2026-12-12T14:00:00-03:00",
+    /** 12/12/2026 13h30 em America/Sao_Paulo (UTC-3, sem horário de verão). */
+    startISO: "2026-12-12T13:30:00-03:00",
     endISO: "2026-12-12T18:00:00-03:00",
     timeZone: "America/Sao_Paulo",
     dayLabel: "12",
     monthLabel: "DEZ",
-    timeLabel: "às 14h",
+    timeLabel: "às 13h30",
     address: env(process.env.NEXT_PUBLIC_EVENT_ADDRESS),
   },
   pix: {
