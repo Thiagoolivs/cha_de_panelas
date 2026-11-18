@@ -146,3 +146,32 @@ test("os noivos aparecem ao escolher, mesmo com 'Reduzir movimento', e dá para 
   await page.getByRole("button", { name: "Ver os noivos de novo" }).click();
   await expect(couple).toHaveCount(2, { timeout: 6000 });
 });
+
+test("queda do presente não sai do lugar com o celular lento (bug do Safari: cômodo sumia)", async ({ page, context }) => {
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.goto("/presentes");
+  await page.waitForLoadState("networkidle");
+  await page.evaluate(() => {
+    const w = window as unknown as { __maxDrop: number };
+    w.__maxDrop = 0;
+    const orig = Element.prototype.setAttribute;
+    Element.prototype.setAttribute = function (name: string, value: string) {
+      if (name === "transform" && this.hasAttribute("data-item")) {
+        const m = String(value).match(/translate\(0 ([^)]+)\)/);
+        const y = m ? Math.abs(Number(m[1])) : 0;
+        w.__maxDrop = Number.isFinite(y) ? Math.max(w.__maxDrop, y) : Infinity;
+      }
+      return orig.call(this, name, value);
+    };
+  });
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 8 });
+  await page.locator('[data-gift="kit-corte"]').getByRole("button", { name: /Escolher este presente/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
+  await expect(page.locator('[data-joint="l-shoulder"]')).toHaveCount(2, { timeout: 10000 });
+  await page.waitForTimeout(2500);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+  const maxDrop = await page.evaluate(() => (window as unknown as { __maxDrop: number }).__maxDrop);
+  expect(maxDrop).toBeLessThanOrEqual(60);
+});

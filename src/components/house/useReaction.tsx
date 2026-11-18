@@ -22,33 +22,46 @@ export const T = {
 
 export type Stage = "idle" | "zoom" | "drop" | "enter" | "look" | "pose" | "exit";
 
-/** Queda curta (~600 ms) com mola bem amortecida: sem bounce exagerado. */
+/** Altura de onde o item cai (unidades do SVG) e duração da queda. */
+const DROP_FROM = -60;
+const DROP_MS = 560;
+
+/** Ease-out com um leve quique no fim (sem passar de ~4 unidades). */
+function dropOffset(p: number): number {
+  const t = Math.min(1, Math.max(0, p));
+  const c1 = 1.25;
+  const c3 = c1 + 1;
+  const back = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  return DROP_FROM * (1 - back);
+}
+
+/**
+ * Queda do item no slot. A posição é função só do tempo decorrido (não de um
+ * passo a passo de física): fica igual a 30, 60 ou 120 quadros por segundo.
+ * Antes, com quadros lentos (comum no iPhone durante o zoom), a mola "explodia",
+ * o item ia para posições gigantes e o Safari deixava de desenhar o cômodo inteiro.
+ */
 function animateDrop(el: SVGGElement, onDone: () => void): () => void {
   let raf = 0;
-  let y = -60;
-  let v = 0;
-  let last = performance.now();
-  const t0 = last;
-  const k = 170; // rigidez
-  const c = 2 * Math.sqrt(k) * 0.82; // amortecimento (ζ≈0,82)
+  const t0 = performance.now();
   const step = (now: number) => {
-    const dt = Math.min(0.032, (now - last) / 1000);
-    last = now;
-    const a = -k * y - c * v;
-    v += a * dt * 4;
-    y += v * dt * 4;
     const elapsed = now - t0;
-    el.style.opacity = String(Math.min(1, elapsed / 140));
+    const y = Math.max(DROP_FROM, Math.min(6, dropOffset(elapsed / DROP_MS)));
+    el.setAttribute("opacity", String(Math.min(1, elapsed / 140)));
     el.setAttribute("transform", `translate(0 ${y.toFixed(2)})`);
-    if (elapsed < 650 && (Math.abs(y) > 0.05 || Math.abs(v) > 0.05)) raf = requestAnimationFrame(step);
+    if (elapsed < DROP_MS) raf = requestAnimationFrame(step);
     else {
       el.removeAttribute("transform");
-      el.style.opacity = "";
+      el.removeAttribute("opacity");
       onDone();
     }
   };
   raf = requestAnimationFrame(step);
-  return () => cancelAnimationFrame(raf);
+  return () => {
+    cancelAnimationFrame(raf);
+    el.removeAttribute("transform");
+    el.removeAttribute("opacity");
+  };
 }
 
 export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView>; reduce: boolean }) {
