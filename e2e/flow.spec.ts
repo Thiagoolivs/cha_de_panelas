@@ -19,7 +19,7 @@ test("landing mostra o convite e oferece a agenda", async ({ page, request }) =>
 
 test("escolher um presente em até 4 toques com o nome salvo, ver na lista e desfazer", async ({ page }) => {
   await page.goto("/");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.goto("/");
   // 1: abrir a lista
   await page.getByRole("link", { name: "Ver a lista de presentes" }).first().click();
@@ -41,29 +41,30 @@ test("escolher um presente em até 4 toques com o nome salvo, ver na lista e des
   await expect(card.getByRole("button", { name: /Escolher este presente/ })).toBeVisible();
 });
 
-test("primeira vez pede o nome; conflito mostra mensagem simpática", async ({ page, context }) => {
+test("pede nome e recado; conflito mostra mensagem simpática", async ({ page, context }) => {
   await page.goto("/presentes");
   const other = await context.newPage();
   await other.goto("/presentes");
   await expect(other.locator('[data-gift="bule"] button')).toBeVisible();
 
+  // as duas pessoas abrem o bule ao mesmo tempo
   await page.locator('[data-gift="bule"]').getByRole("button", { name: /Escolher/ }).click();
+  await other.locator('[data-gift="bule"]').getByRole("button", { name: /Escolher/ }).click();
   await page.getByRole("textbox", { name: "Seu nome" }).fill("Primeira");
-  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByRole("textbox", { name: "Recado para os noivos" }).fill("Muitas felicidades para vocês dois!");
+  await other.getByRole("textbox", { name: "Seu nome" }).fill("Segunda");
+  await other.getByRole("textbox", { name: "Recado para os noivos" }).fill("Que a casa de vocês seja cheia de amor.");
+
+  // a primeira confirma; a segunda, que ainda via o bule livre, recebe "taken"
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
   await expect(page.locator('[data-gift="bule"]')).toContainText("Você escolheu");
-
-  // a outra aba ainda vê o bule livre; ao tentar, recebe "taken"
-  await other.locator('[data-gift="bule"]').getByRole("button", { name: /Escolher/ }).click();
-  await other.getByRole("textbox", { name: "Seu nome" }).fill("Segunda");
-  await other.getByRole("button", { name: "Continuar" }).click();
   await other.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
   await expect(other.getByText("Alguém acabou de escolher este. Que tal outro?").first()).toBeVisible();
 });
 
 test("item com quantidade 2 aceita duas pessoas", async ({ page }) => {
   await page.goto("/presentes");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Ana"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Ana"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.reload();
   const card = page.locator('[data-gift="tabua-de-corte"]');
   await expect(card).toContainText("Faltam 2 de 2");
@@ -86,7 +87,7 @@ test("recado: valida o tamanho e agradece", async ({ page }) => {
 
 test("prévia do admin não mostra quem deu", async ({ page }) => {
   await page.goto("/presentes");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Nome Secreto"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Nome Secreto"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.reload();
   await page.locator('[data-gift="mixer"]').getByRole("button", { name: /Escolher/ }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
@@ -122,7 +123,7 @@ test("Pix anônimo: marca o valor, a noiva vê só o total, e dá para desfazer"
 
 test("organizador vê quem escolheu cada presente", async ({ page }) => {
   await page.goto("/");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.goto("/presentes");
   await page.locator('[data-gift="airfryer"]').getByRole("button", { name: /Escolher este presente/ }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
@@ -135,7 +136,7 @@ test("organizador vê quem escolheu cada presente", async ({ page }) => {
 test("os noivos aparecem ao escolher, mesmo com 'Reduzir movimento', e dá para ver de novo", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.goto("/presentes");
   await page.locator('[data-gift="mixer"]').getByRole("button", { name: /Escolher este presente/ }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
@@ -149,7 +150,7 @@ test("os noivos aparecem ao escolher, mesmo com 'Reduzir movimento', e dá para 
 
 test("queda do presente não sai do lugar com o celular lento (bug do Safari: cômodo sumia)", async ({ page, context }) => {
   await page.goto("/");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.evaluate(() => (localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"), localStorage.setItem("chadosnoivos:message-sent", "1")));
   await page.goto("/presentes");
   await page.waitForLoadState("networkidle");
   await page.evaluate(() => {
@@ -174,4 +175,29 @@ test("queda do presente não sai do lugar com o celular lento (bug do Safari: c�
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
   const maxDrop = await page.evaluate(() => (window as unknown as { __maxDrop: number }).__maxDrop);
   expect(maxDrop).toBeLessThanOrEqual(60);
+});
+
+test("nome e recado são obrigatórios antes de confirmar o presente", async ({ page }) => {
+  await page.goto("/presentes");
+  await page.locator('[data-gift="bule"]').getByRole("button", { name: /Escolher este presente/ }).click();
+  const dialog = page.getByRole("dialog");
+  // sem nome e sem recado: não confirma
+  await dialog.getByRole("button", { name: "Confirmar" }).click();
+  await expect(dialog.getByText("Escreva seu nome.")).toBeVisible();
+  await dialog.getByRole("textbox", { name: "Seu nome" }).fill("Carla");
+  await dialog.getByRole("textbox", { name: "Recado para os noivos" }).fill("Curto");
+  await dialog.getByRole("button", { name: "Confirmar" }).click();
+  await expect(dialog.getByText(/Mínimo de 20 caracteres/)).toBeVisible();
+  await expect(page.locator('[data-gift="bule"]')).not.toContainText("Você escolheu");
+  // com recado: confirma, e o recado chega aos noivos
+  await dialog.getByRole("textbox", { name: "Recado para os noivos" }).fill("Que essa casa seja cheia de chá e de amor!");
+  await dialog.getByRole("button", { name: "Confirmar" }).click();
+  await expect(page.getByRole("region", { name: "Meus presentes" })).toContainText("Bule de chá");
+  // segundo presente: não pede o recado de novo
+  await page.locator('[data-gift="mixer"]').getByRole("button", { name: /Escolher este presente/ }).click();
+  await expect(page.getByRole("dialog").getByText("Seu recado já chegou aos noivos. Obrigado!")).toBeVisible();
+  await page.getByRole("dialog").getByRole("button", { name: "Voltar" }).click();
+  await page.goto("/admin");
+  await page.getByRole("tab", { name: "Recados" }).click();
+  await expect(page.getByText("Que essa casa seja cheia de chá e de amor!")).toBeVisible();
 });

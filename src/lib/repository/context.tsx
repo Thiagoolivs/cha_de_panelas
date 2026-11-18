@@ -8,6 +8,8 @@ import { browserStore } from "./storage";
 
 const NAME_KEY = "chadosnoivos:guest-name";
 const MINE_KEY = "chadosnoivos:my-gifts";
+/** Já deixou recado neste aparelho (o recado é pedido ao escolher o primeiro presente). */
+const MSG_KEY = "chadosnoivos:message-sent";
 const POLL_MS = 20_000;
 
 export interface MyGift {
@@ -27,9 +29,12 @@ interface GiftsContextValue {
   guestName: string | null;
   setGuestName(name: string): void;
   myGifts: MyGift[];
-  reserve(giftId: string): Promise<ReserveResult>;
+  /** Reserva uma unidade. `name` sobrescreve o nome salvo (usado ao confirmar com nome novo). */
+  reserve(giftId: string, name?: string): Promise<ReserveResult>;
   undo(giftId: string): Promise<void>;
   sendMessage(m: Message): Promise<void>;
+  /** Este aparelho já mandou um recado para os noivos. */
+  messageSent: boolean;
   refresh(): Promise<void>;
   reaction: ReactionRequest | null;
   requestReaction(giftId: string): void;
@@ -47,6 +52,7 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
   const [guestName, setName] = useState<string | null>(null);
   const [myGifts, setMyGifts] = useState<MyGift[]>([]);
   const [reaction, setReaction] = useState<ReactionRequest | null>(null);
+  const [messageSent, setMessageSent] = useState(false);
   const nonce = useRef(0);
 
   const refresh = useCallback(async () => {
@@ -60,6 +66,7 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setName(store.get(NAME_KEY));
+    setMessageSent(store.get(MSG_KEY) === "1");
     try {
       const raw = store.get(MINE_KEY);
       if (raw) setMyGifts(JSON.parse(raw) as MyGift[]);
@@ -120,8 +127,8 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
   }, []);
 
   const reserve = useCallback(
-    async (giftId: string) => {
-      const name = guestName ?? "";
+    async (giftId: string, nameOverride?: string) => {
+      const name = nameOverride ?? guestName ?? "";
       const result = await repo.reserve(giftId, name);
       if (result.status === "ok") {
         addMine({ giftId, token: result.token });
@@ -169,7 +176,14 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
     if (valid.length !== myGifts.length) persistMine(valid);
   }, [gifts, myGifts, persistMine]);
 
-  const sendMessage = useCallback((m: Message) => repo.sendMessage(m), [repo]);
+  const sendMessage = useCallback(
+    async (m: Message) => {
+      await repo.sendMessage(m);
+      store.set(MSG_KEY, "1");
+      setMessageSent(true);
+    },
+    [repo, store],
+  );
   const clearReaction = useCallback(() => setReaction(null), []);
 
   const value: GiftsContextValue = {
@@ -182,6 +196,7 @@ export function GiftsProvider({ children, repository }: { children: React.ReactN
     reserve,
     undo,
     sendMessage,
+    messageSent,
     refresh,
     reaction,
     requestReaction,

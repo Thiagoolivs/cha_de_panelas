@@ -8,7 +8,7 @@ import { useGifts } from "@/lib/repository/context";
 import { useToast } from "@/components/ui/Toast";
 import { giftsCopy } from "@/content/gifts-copy";
 import { GiftList } from "./GiftList";
-import { ChooseDialog } from "./ChooseDialog";
+import { ChooseDialog, type ChooseDetails } from "./ChooseDialog";
 import { MyGifts } from "./MyGifts";
 import { AfterChoice } from "./AfterChoice";
 import { PaletteNote } from "./PaletteNote";
@@ -39,7 +39,7 @@ function waitUntilVisible(el: HTMLElement | null, maxMs: number): Promise<void> 
 }
 
 export function GiftsExperience() {
-  const { gifts, myGifts, guestName, setGuestName, reserve, undo, requestReaction } = useGifts();
+  const { gifts, myGifts, guestName, setGuestName, reserve, undo, requestReaction, sendMessage, messageSent } = useGifts();
   const toast = useToast();
   const [selected, setSelected] = useState<GiftView | null>(null);
   const [lastChosen, setLastChosen] = useState<GiftView | null>(null);
@@ -53,12 +53,16 @@ export function GiftsExperience() {
   }, [myGifts]);
   const mine = useMemo(() => (gifts ?? []).filter((g) => mineCounts.has(g.id)), [gifts, mineCounts]);
 
-  async function confirm(gift: GiftView, qty = 1) {
+  async function confirm(gift: GiftView, qty: number, details: ChooseDetails) {
+    setGuestName(details.name);
+    // Recado obrigatório antes do presente. Vai para os recados, sem ligação com o presente.
+    // Se falhar, nada é reservado e o modal mostra o erro (o throw volta para ele).
+    if (details.message) await sendMessage({ authorName: details.name, text: details.message });
     // Uma reserva por unidade (cada uma com seu token, para poder desfazer uma a uma).
     let ok = 0;
     let taken = false;
     for (let n = 0; n < qty; n++) {
-      const result = await reserve(gift.id);
+      const result = await reserve(gift.id, details.name);
       if (result.status === "ok") ok++;
       else {
         taken = true;
@@ -147,7 +151,7 @@ export function GiftsExperience() {
         key={selected?.id ?? "fechado"}
         gift={selected}
         guestName={guestName}
-        onSaveName={setGuestName}
+        messageSent={messageSent}
         onConfirm={confirm}
         onClose={() => setSelected(null)}
       />

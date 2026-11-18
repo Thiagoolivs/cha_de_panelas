@@ -30,6 +30,7 @@ async function load(page: Page, ids: string[]) {
   await page.evaluate(([k, v]) => {
     localStorage.setItem(k, v);
     localStorage.setItem("chadosnoivos:guest-name", "Ana");
+    localStorage.setItem("chadosnoivos:message-sent", "1");
   }, [KEY, state(ids)] as const);
   await page.reload({ waitUntil: "networkidle" });
   await page.locator('section[aria-labelledby="casinha-title"] svg').waitFor();
