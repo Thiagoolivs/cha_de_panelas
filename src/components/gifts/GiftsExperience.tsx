@@ -1,0 +1,160 @@
+"use client";
+
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useMemo, useRef, useState } from "react";
+import type { GiftView } from "@/lib/types";
+import { useGifts } from "@/lib/repository/context";
+import { useToast } from "@/components/ui/Toast";
+import { giftsCopy } from "@/content/gifts-copy";
+import { GiftList } from "./GiftList";
+import { ChooseDialog, type ChooseDetails } from "./ChooseDialog";
+import { MyGifts } from "./MyGifts";
+import { AfterChoice } from "./AfterChoice";
+import { PaletteNote } from "./PaletteNote";
+
+// A casinha carrega depois, sem bloquear a lista.
+const HouseStage = dynamic(() => import("@/components/house/HouseStage").then((m) => m.HouseStage), {
+  ssr: false,
+  loading: () => <div className="aspect-[760/668] w-full animate-pulse bg-olive-700/5" aria-hidden="true" />,
+});
+
+/** Espera o elemento chegar ao topo da tela (fim da rolagem suave), com limite de tempo. */
+function waitUntilVisible(el: HTMLElement | null, maxMs: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (!el) return resolve();
+    const t0 = performance.now();
+    let lastTop = Infinity;
+    let still = 0;
+    const tick = () => {
+      const top = el.getBoundingClientRect().top;
+      still = Math.abs(top - lastTop) < 0.5 ? still + 1 : 0;
+      lastTop = top;
+      const arrived = top > -40 && top < 80 && still >= 3;
+      if (arrived || performance.now() - t0 > maxMs) resolve();
+      else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+export function GiftsExperience() {
+  const { gifts, myGifts, guestName, setGuestName, reserve, undo, requestReaction, sendMessage, messageSent } = useGifts();
+  const toast = useToast();
+  const [selected, setSelected] = useState<GiftView | null>(null);
+  const [lastChosen, setLastChosen] = useState<GiftView | null>(null);
+  const [announce, setAnnounce] = useState("");
+  const houseRef = useRef<HTMLDivElement>(null);
+
+  const mineCounts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const g of myGifts) m.set(g.giftId, (m.get(g.giftId) ?? 0) + 1);
+    return m;
+  }, [myGifts]);
+  const mine = useMemo(() => (gifts ?? []).filter((g) => mineCounts.has(g.id)), [gifts, mineCounts]);
+
+  async function confirm(gift: GiftView, qty: number, details: ChooseDetails) {
+    setGuestName(details.name);
+    // Recado obrigatório antes do presente. Vai para os recados, sem ligação com o presente.
+    // Se falhar, nada é reservado e o modal mostra o erro (o throw volta para ele).
+    if (details.message) await sendMessage({ authorName: details.name, text: details.message });
+    // Uma reserva por unidade (cada uma com seu token, para poder desfazer uma a uma).
+    let ok = 0;
+    let taken = false;
+    for (let n = 0; n < qty; n++) {
+      const result = await reserve(gift.id, details.name);
+      if (result.status === "ok") ok++;
+      else {
+        taken = true;
+        break;
+      }
+    }
+    setSelected(null);
+    if (ok > 0) {
+      setLastChosen(gift);
+      setAnnounce(giftsCopy.ok(ok > 1 ? `${ok}× ${gift.title}` : gift.title));
+      if (taken) toast(`Deu para escolher ${ok}. As outras unidades alguém acabou de escolher.`);
+      // Espera o modal fechar (ele trava a rolagem do body), leva à casinha e só então
+      // dispara a reação dos noivos, para ela acontecer na frente do convidado.
+      await new Promise((r) => window.setTimeout(r, 80));
+      await playReaction(gift);
+    } else {
+      setAnnounce(giftsCopy.taken);
+      toast(giftsCopy.taken);
+    }
+  }
+
+  /** Leva à casinha e dispara a reação dos noivos (também usado no "ver de novo"). */
+  async function playReaction(gift: GiftView) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    await waitUntilVisible(houseRef.current, 1600);
+    requestReaction(gift.id);
+  }
+
+  async function onUndo(gift: GiftView) {
+    await undo(gift.id);
+    if (lastChosen?.id === gift.id) setLastChosen(null);
+    setAnnounce(giftsCopy.undone(gift.title));
+    toast(giftsCopy.undone(gift.title));
+  }
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 pb-24 lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
+      <p aria-live="polite" className="sr-only">
+        {announce}
+      </p>
+
+      <div ref={houseRef} className="scroll-mt-2 lg:sticky lg:top-4 lg:self-start">
+        <HouseStage />
+        {lastChosen && (
+          <div className="mt-3">
+            <AfterChoice gift={lastChosen} onDismiss={() => setLastChosen(null)} onReplay={() => void playReaction(lastChosen)} />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-8 lg:mt-0">
+        <header>
+          <Link href="/" className="eyebrow inline-flex min-h-[44px] items-center">
+            Kaw e Than · Chá dos Noivos
+          </Link>
+          <h1 className="title-caps text-[2.1rem]">{giftsCopy.title}</h1>
+          <p className="mt-2 text-[0.98rem]">{giftsCopy.intro}</p>
+          <ol className="mt-4 space-y-2.5 rounded-2xl bg-white/85 p-4 ring-1 ring-olive-700/15" aria-label={giftsCopy.howTitle}>
+            {giftsCopy.howSteps.map(([title, text], i) => (
+              <li key={title} className="flex gap-3 text-[0.92rem] leading-snug">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-olive-700 font-display text-[1rem] text-white">{i + 1}</span>
+                <span>
+                  <b>{title}:</b> {text}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-3 text-[0.88rem] text-olive-900">Os noivos não verão quem escolheu cada presente.</p>
+          <PaletteNote />
+        </header>
+
+        {mine.length > 0 && (
+          <div className="mt-6">
+            <MyGifts gifts={mine} counts={mineCounts} onUndo={onUndo} />
+          </div>
+        )}
+
+        <div className="mt-6">
+          <GiftList gifts={gifts} mineCounts={mineCounts} onChoose={setSelected} />
+        </div>
+
+      </div>
+
+      <ChooseDialog
+        key={selected?.id ?? "fechado"}
+        gift={selected}
+        guestName={guestName}
+        messageSent={messageSent}
+        onConfirm={confirm}
+        onClose={() => setSelected(null)}
+      />
+    </div>
+  );
+}
