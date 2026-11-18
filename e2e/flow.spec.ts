@@ -72,21 +72,6 @@ test("item com quantidade 2 aceita duas pessoas", async ({ page }) => {
   await expect(card).toContainText("Você escolheu");
 });
 
-test("reduced motion: sem animação, frase em toast", async ({ browser }) => {
-  const ctx = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 375, height: 812 } });
-  const page = await ctx.newPage();
-  await page.goto("/presentes");
-  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Ana"));
-  await page.reload();
-  await page.locator('[data-gift="airfryer"]').getByRole("button", { name: /Escolher/ }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
-  await expect(page.getByRole("status").filter({ hasText: /\./ }).first()).toBeVisible();
-  // personagens nunca entram
-  await page.waitForTimeout(1500);
-  await expect(page.locator('[data-joint="l-shoulder"]')).toHaveCount(0);
-  await ctx.close();
-});
-
 test("recado: valida o tamanho e agradece", async ({ page }) => {
   await page.goto("/recado");
   await expect(page.getByText("Este recado vai só para a Kawany e não tem ligação com o presente que você escolheu.")).toBeVisible();
@@ -145,4 +130,19 @@ test("organizador vê quem escolheu cada presente", async ({ page }) => {
   await page.goto("/organizador");
   await expect(page.getByText(/^Air fryer/)).toBeVisible();
   await expect(page.getByText("Convidada Teste")).toBeVisible();
+});
+
+test("os noivos aparecem ao escolher, mesmo com 'Reduzir movimento', e dá para ver de novo", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("chadosnoivos:guest-name", "Convidada Teste"));
+  await page.goto("/presentes");
+  await page.locator('[data-gift="mixer"]').getByRole("button", { name: /Escolher este presente/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Confirmar" }).click();
+  // um ombro esquerdo para cada um dos noivos
+  const couple = page.locator('[data-joint="l-shoulder"]');
+  await expect(couple).toHaveCount(2, { timeout: 6000 });
+  await expect(couple).toHaveCount(0, { timeout: 8000 });
+  await page.getByRole("button", { name: "Ver os noivos de novo" }).click();
+  await expect(couple).toHaveCount(2, { timeout: 6000 });
 });

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { GiftView, Room } from "@/lib/types";
 import { useGifts } from "@/lib/repository/context";
-import { useToast } from "@/components/ui/Toast";
 import { REACTION_POSES, pickPhrase } from "@/lib/phrases";
 import { AnimatePresence, motion } from "framer-motion";
 import { Couple } from "@/components/characters/Couple";
@@ -54,7 +53,6 @@ function animateDrop(el: SVGGElement, onDone: () => void): () => void {
 
 export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView>; reduce: boolean }) {
   const { reaction, clearReaction } = useGifts();
-  const toast = useToast();
   const [stage, setStage] = useState<Stage>("idle");
   const [gift, setGift] = useState<GiftView | null>(null);
   const [phrase, setPhrase] = useState("");
@@ -72,10 +70,8 @@ export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView
     clearReaction();
     if (!g) return;
     const p = pickPhrase(g);
-    if (reduce) {
-      toast(p, "script");
-      return;
-    }
+    // Mesmo com "Reduzir movimento" ligado (comum no iPhone) os noivos aparecem:
+    // a reação é o ponto alto. Nesse modo só a câmera e a queda do item ficam sem animação.
     timers.current.forEach(clearTimeout);
     timers.current = [];
     const at = (ms: number, fn: () => void) => timers.current.push(window.setTimeout(fn, ms));
@@ -91,13 +87,13 @@ export function useReaction({ giftMap, reduce }: { giftMap: Map<string, GiftView
       setStage("idle");
       setGift(null);
     });
-  }, [reaction, clearReaction, reduce, toast]);
+  }, [reaction, clearReaction]);
 
-  // Dispara a queda quando o item entra no DOM.
+  // Dispara a queda quando o item entra no DOM (sem queda se "Reduzir movimento").
   useEffect(() => {
-    if (stage !== "drop" || !dropRef.current) return;
+    if (stage !== "drop" || !dropRef.current || reduce) return;
     return animateDrop(dropRef.current, () => {});
-  }, [stage]);
+  }, [stage, reduce]);
 
   const active = stage !== "idle";
   const focus: Room | null = active && gift ? gift.room : null;

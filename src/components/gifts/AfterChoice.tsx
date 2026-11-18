@@ -7,12 +7,18 @@ import { giftsCopy } from "@/content/gifts-copy";
 import { doubtLink } from "@/lib/contact";
 
 /** Depois de escolher: contato para dúvidas de estilo e convite discreto para o recado. */
-export function AfterChoice({ gift, onDismiss }: { gift: GiftView; onDismiss(): void }) {
+export function AfterChoice({ gift, onDismiss, onReplay }: { gift: GiftView; onDismiss(): void; onReplay(): void }) {
   const contact = site.styleContact;
   const wa = doubtLink(gift.title);
   return (
     <section aria-label="Próximos passos" className="relative border-l-2 border-olive-700 bg-white/70 py-4 pr-12 pl-4">
       <p className="font-serif text-[1.25rem] leading-tight text-olive-700">{giftsCopy.ok(gift.title)}</p>
+      <button type="button" onClick={onReplay} className="btn btn-outline mt-3 min-h-[40px] gap-1.5 px-4 py-1.5 text-[0.75rem]">
+        <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="currentColor">
+          <path d="M8 5.5v13l10.5-6.5z" />
+        </svg>
+        {giftsCopy.replay}
+      </button>
       <p className="mt-2 text-[0.92rem]">{giftsCopy.styleQuestion(contact.name)}</p>
       <div className="mt-2 flex flex-wrap gap-x-5">
         {wa && (

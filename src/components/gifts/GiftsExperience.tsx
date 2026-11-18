@@ -72,15 +72,20 @@ export function GiftsExperience() {
       if (taken) toast(`Deu para escolher ${ok}. As outras unidades alguém acabou de escolher.`);
       // Espera o modal fechar (ele trava a rolagem do body), leva à casinha e só então
       // dispara a reação dos noivos, para ela acontecer na frente do convidado.
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       await new Promise((r) => window.setTimeout(r, 80));
-      houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-      await waitUntilVisible(houseRef.current, 1600);
-      requestReaction(gift.id);
+      await playReaction(gift);
     } else {
       setAnnounce(giftsCopy.taken);
       toast(giftsCopy.taken);
     }
+  }
+
+  /** Leva à casinha e dispara a reação dos noivos (também usado no "ver de novo"). */
+  async function playReaction(gift: GiftView) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    houseRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    await waitUntilVisible(houseRef.current, 1600);
+    requestReaction(gift.id);
   }
 
   async function onUndo(gift: GiftView) {
@@ -100,7 +105,7 @@ export function GiftsExperience() {
         <HouseStage />
         {lastChosen && (
           <div className="mt-3">
-            <AfterChoice gift={lastChosen} onDismiss={() => setLastChosen(null)} />
+            <AfterChoice gift={lastChosen} onDismiss={() => setLastChosen(null)} onReplay={() => void playReaction(lastChosen)} />
           </div>
         )}
       </div>

@@ -25,6 +25,7 @@ export const giftsCopy = {
   multiNote: "Pode ser de pessoas diferentes ou a mesma pessoa dar mais de um.",
   mineCount: (n: number) => (n === 1 ? "Você escolheu 1" : `Você escolheu ${n}`),
   chooseMore: "Escolher mais um",
+  replay: "Ver os noivos de novo",
   howMany: "Quantos você vai dar?",
   nameTitle: "Antes, seu nome",
   nameLabel: "Seu nome",
