@@ -22,7 +22,7 @@ export const copy = {
   },
   comoFazerParte: {
     title: "Como fazer parte?",
-    body: "Você deverá acessar o link abaixo, escolher o presente que deseja oferecer e colocar seu nome.",
+    body: "Você deverá acessar o link abaixo, escolher o presente que deseja oferecer e colocar seu nome. Depois é só comprar onde preferir e levar no dia do chá.",
     cta: "Escolher meu presente",
     videoSoon: "Aqui dentro um vídeo explicativo",
     privacy: "Obs.: os noivos não verão quem escolheu cada presente.",

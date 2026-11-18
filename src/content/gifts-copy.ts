@@ -1,4 +1,8 @@
 import type { Room, Tier } from "@/lib/types";
+import { site } from "@/config/site";
+
+/** "12/12, às 13h30" (vem da configuração do evento). */
+const DAY = `${site.event.dayLabel}/12, ${site.event.timeLabel}`;
 
 export const ROOM_LABEL: Record<Room, string> = {
   cozinha: "Cozinha",
@@ -20,7 +24,16 @@ export const giftsCopy = {
   choose: "Escolher este presente",
   chosen: "Já escolhido",
   mine: "Você escolheu",
-  whereToFind: "Onde encontrar",
+  whereToFind: "Sugestões de onde comprar",
+  /** Como funciona: o site só reserva; a pessoa compra e leva no dia. */
+  howTitle: "Como funciona",
+  howSteps: [
+    ["Escolha aqui", "o presente fica reservado para você e ninguém repete."],
+    ["Compre onde preferir", "em loja física ou pela internet. Os links são só sugestões, o site não vende nada."],
+    ["Leve no dia do chá", `${DAY}.`],
+  ] as const,
+  buyAndBring: `Você compra onde preferir e leva no dia do chá (${DAY}).`,
+  bringOnDay: `Agora é só comprar onde preferir e levar no dia do chá (${DAY}).`,
   remaining: (n: number, total: number) => (n === 1 ? `Falta 1 de ${total}` : `Faltam ${n} de ${total}`),
   multiNote: "Pode ser de pessoas diferentes ou a mesma pessoa dar mais de um.",
   mineCount: (n: number) => (n === 1 ? "Você escolheu 1" : `Você escolheu ${n}`),

@@ -117,7 +117,17 @@ export function GiftsExperience() {
           </Link>
           <h1 className="title-caps text-[2.1rem]">{giftsCopy.title}</h1>
           <p className="mt-2 text-[0.98rem]">{giftsCopy.intro}</p>
-          <p className="mt-1 text-[0.88rem] text-olive-900">Os noivos não verão quem escolheu cada presente.</p>
+          <ol className="mt-4 space-y-2.5 rounded-2xl bg-white/85 p-4 ring-1 ring-olive-700/15" aria-label={giftsCopy.howTitle}>
+            {giftsCopy.howSteps.map(([title, text], i) => (
+              <li key={title} className="flex gap-3 text-[0.92rem] leading-snug">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-olive-700 font-display text-[1rem] text-white">{i + 1}</span>
+                <span>
+                  <b>{title}:</b> {text}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-3 text-[0.88rem] text-olive-900">Os noivos não verão quem escolheu cada presente.</p>
           <PaletteNote />
         </header>
 

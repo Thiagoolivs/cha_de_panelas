@@ -69,6 +69,7 @@ export function ChooseDialog({ gift, guestName, onSaveName, onConfirm, onClose }
               {giftsCopy.confirm(gift.title)[2]}
             </p>
           </div>
+          <p className="mt-3 rounded-xl bg-white px-3 py-2 text-[0.88rem] text-olive-900">{giftsCopy.buyAndBring}</p>
           {max > 1 && (
             <div className="mt-5 flex items-center justify-between rounded-xl bg-white px-4 py-3">
               <span id="qty-label" className="text-[0.95rem] font-medium">

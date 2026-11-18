@@ -13,6 +13,7 @@ export function AfterChoice({ gift, onDismiss, onReplay }: { gift: GiftView; onD
   return (
     <section aria-label="Próximos passos" className="relative border-l-2 border-olive-700 bg-white/70 py-4 pr-12 pl-4">
       <p className="font-serif text-[1.25rem] leading-tight text-olive-700">{giftsCopy.ok(gift.title)}</p>
+      <p className="mt-1.5 text-[0.95rem] font-medium">{giftsCopy.bringOnDay}</p>
       <button type="button" onClick={onReplay} className="btn btn-outline mt-3 min-h-[40px] gap-1.5 px-4 py-1.5 text-[0.75rem]">
         <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="currentColor">
           <path d="M8 5.5v13l10.5-6.5z" />
